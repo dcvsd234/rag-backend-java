@@ -1,0 +1,2 @@
+org.horizon.framework.quartz.config.HorizonXxlJobAutoConfiguration
+org.horizon.framework.quartz.config.HorizonAsyncAutoConfiguration

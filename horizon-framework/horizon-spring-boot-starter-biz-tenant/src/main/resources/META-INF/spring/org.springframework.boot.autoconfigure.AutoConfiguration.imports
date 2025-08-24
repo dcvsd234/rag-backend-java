@@ -1,0 +1,2 @@
+org.horizon.framework.tenant.config.HorizonTenantRpcAutoConfiguration
+org.horizon.framework.tenant.config.HorizonTenantAutoConfiguration

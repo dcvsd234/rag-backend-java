@@ -1,0 +1,2 @@
+org.horizon.framework.dict.config.HorizonDictRpcAutoConfiguration
+org.horizon.framework.dict.config.HorizonDictAutoConfiguration

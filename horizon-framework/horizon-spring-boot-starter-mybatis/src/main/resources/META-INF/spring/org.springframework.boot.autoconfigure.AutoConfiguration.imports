@@ -1,0 +1,3 @@
+org.horizon.framework.datasource.config.HorizonDataSourceAutoConfiguration
+org.horizon.framework.mybatis.config.HorizonMybatisAutoConfiguration
+org.horizon.framework.translate.config.HorizonTranslateAutoConfiguration

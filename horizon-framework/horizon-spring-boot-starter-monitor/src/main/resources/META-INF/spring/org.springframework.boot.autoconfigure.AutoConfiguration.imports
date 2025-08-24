@@ -1,0 +1,2 @@
+org.horizon.framework.tracer.config.HorizonTracerAutoConfiguration
+org.horizon.framework.tracer.config.HorizonMetricsAutoConfiguration

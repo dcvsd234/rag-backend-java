@@ -1,0 +1,2 @@
+org.horizon.framework.redis.config.HorizonRedisAutoConfiguration
+org.horizon.framework.redis.config.HorizonCacheAutoConfiguration

@@ -1,0 +1,5 @@
+org.horizon.framework.security.config.HorizonSecurityRpcAutoConfiguration
+org.horizon.framework.security.config.HorizonSecurityAutoConfiguration
+org.horizon.framework.security.config.HorizonWebSecurityConfigurerAdapter
+org.horizon.framework.operatelog.config.HorizonOperateLogConfiguration
+org.horizon.framework.operatelog.config.HorizonOperateLogRpcAutoConfiguration

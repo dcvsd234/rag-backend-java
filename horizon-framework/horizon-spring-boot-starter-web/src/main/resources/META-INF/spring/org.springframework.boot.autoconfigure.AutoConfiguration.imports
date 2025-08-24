@@ -1,0 +1,7 @@
+org.horizon.framework.apilog.config.HorizonApiLogAutoConfiguration
+org.horizon.framework.jackson.config.HorizonJacksonAutoConfiguration
+org.horizon.framework.swagger.config.HorizonSwaggerAutoConfiguration
+org.horizon.framework.web.config.HorizonWebAutoConfiguration
+org.horizon.framework.apilog.config.HorizonApiLogRpcAutoConfiguration
+org.horizon.framework.xss.config.HorizonXssAutoConfiguration
+org.horizon.framework.banner.config.HorizonBannerAutoConfiguration
