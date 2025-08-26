@@ -1,0 +1,49 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.horizon</groupId>
+        <artifactId>horizon-cloud</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>horizon-cloud-starter-config</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <description>
+        Horizon Cloud Config Starter — A Kubernetes-native configuration integration
+        that leverages ConfigMap and Secret as the central configuration source.
+        It provides unified access and optional refresh support for application settings,
+        ensuring sensitive data is managed securely via Kubernetes Secrets.
+    </description>
+
+    <dependencies>
+        <!-- Spring Cloud Kubernetes Config (ConfigMap + Secret integration) -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-kubernetes-fabric8-config</artifactId>
+        </dependency>
+
+        <!-- Spring Cloud Commons (抽象层，推荐保留) -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-commons</artifactId>
+        </dependency>
+
+        <!-- Spring Boot 配置绑定（生成 IDE 自动提示元数据） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>

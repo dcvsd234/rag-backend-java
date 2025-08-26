@@ -73,11 +73,6 @@ functions/mock
 screenshot
 .firebase
 sessionStore
-<<<<<<< HEAD
-=======
 
 /sql/
-/sql/
-
 cp.txt
->>>>>>> bd9a104 (ignore cp.txt files)
