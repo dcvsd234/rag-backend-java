@@ -17,23 +17,6 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Cloud 基础 -->
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-spring-boot-starter-env</artifactId>
-        </dependency>
-
-        <!-- 依赖服务 -->
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-module-system-api</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-module-infra-api</artifactId>
-            <version>${revision}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.horizon</groupId>
@@ -45,10 +28,6 @@
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-biz-data-permission</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-spring-boot-starter-biz-tenant</artifactId>
         </dependency>
 
         <!-- Web 相关 -->
@@ -73,35 +52,6 @@
             <artifactId>horizon-spring-boot-starter-redis</artifactId>
         </dependency>
 
-        <!-- RPC 远程调用相关 -->
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-spring-boot-starter-rpc</artifactId>
-        </dependency>
-
-        <!-- Registry 注册中心相关 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-
-        <!-- Config 配置中心相关 -->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
-
-        <!-- Job 定时任务相关 -->
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-spring-boot-starter-job</artifactId>
-        </dependency>
-
-        <!-- 消息队列相关 -->
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-spring-boot-starter-mq</artifactId>
-        </dependency>
 
         <!-- Test 测试相关 -->
         <dependency>
@@ -109,23 +59,5 @@
             <artifactId>horizon-spring-boot-starter-test</artifactId>
         </dependency>
 
-        <!-- 工具类相关 -->
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-spring-boot-starter-excel</artifactId>
-        </dependency>
-
-        <!-- 监控相关 -->
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-spring-boot-starter-monitor</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 </project>

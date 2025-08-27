@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author 芋道源码
  */
 @SuppressWarnings("SpringComponentScan") // 忽略 IDEA 无法识别 ${horizon.info.base-package}
-@SpringBootApplication(scanBasePackages = {"${horizon.info.base-package}.server", "${horizon.info.base-package}.module"},
+@SpringBootApplication(scanBasePackages = {"${horizon.info.base-package}.server", "${horizon.info.base-package}.module", "org.horizon.module.dataset"},
         excludeName = {
             // RPC 相关
 //            "org.springframework.cloud.openfeign.FeignAutoConfiguration",

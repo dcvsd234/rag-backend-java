@@ -31,7 +31,11 @@
             <artifactId>horizon-module-infra-server</artifactId>
             <version>${revision}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-module-dataset-server</artifactId>
+            <version>${revision}</version>
+        </dependency>
         <!-- 会员中心。默认注释，保证编译速度 -->
 <!--        <dependency>-->
 <!--            <groupId>org.horizon</groupId>-->
