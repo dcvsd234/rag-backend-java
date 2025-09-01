@@ -24,6 +24,13 @@
             <version>${revision}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-framework-ai-client</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <!-- 业务组件 -->
         <dependency>
             <groupId>org.horizon</groupId>
@@ -60,4 +67,18 @@
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
 </project>

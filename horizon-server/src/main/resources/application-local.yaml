@@ -224,3 +224,8 @@ justauth:
 pf4j:
 #  pluginsDir: /tmp/
   pluginsDir: ../plugins
+
+horizon:
+  ai:
+    base-url: http://127.0.0.1:8020
+    api-key: test-key   # 可选

@@ -158,12 +158,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-module-system-server</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.4</version>
@@ -176,6 +170,18 @@
         <!-- 设置构建的 jar 包名 -->
         <finalName>${project.artifactId}</finalName>
         <plugins>
+
+            <!-- 编译器插件，强制使用 JDK 17 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <release>17</release>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
             <!-- 打包 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>

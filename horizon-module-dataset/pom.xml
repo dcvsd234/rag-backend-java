@@ -18,8 +18,8 @@
         Dataset Module — RAG dataset management, providing file upload, parsing, category label management, prompt verification, auditing, and version control.
     </description>
     <modules>
-        <module>horizon-module-dataset-api</module>
         <module>horizon-module-dataset-server</module>
+        <module>horizon-module-dataset-api</module>
     </modules>
 
 </project>
