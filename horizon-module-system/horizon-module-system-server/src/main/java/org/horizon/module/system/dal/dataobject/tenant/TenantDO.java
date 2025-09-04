@@ -2,13 +2,16 @@ package org.horizon.module.system.dal.dataobject.tenant;
 
 import org.horizon.framework.common.enums.CommonStatusEnum;
 import org.horizon.framework.mybatis.core.dataobject.BaseDO;
+import org.horizon.framework.mybatis.core.type.StringListTypeHandler;
 import org.horizon.framework.tenant.core.aop.TenantIgnore;
 import org.horizon.module.system.dal.dataobject.user.AdminUserDO;
 import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 租户 DO

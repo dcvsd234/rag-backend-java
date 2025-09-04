@@ -3,6 +3,7 @@ package org.horizon.module.system.dal.mysql.tenant;
 import org.horizon.framework.common.pojo.PageResult;
 import org.horizon.framework.mybatis.core.mapper.BaseMapperX;
 import org.horizon.framework.mybatis.core.query.LambdaQueryWrapperX;
+import org.horizon.framework.mybatis.core.util.MyBatisUtils;
 import org.horizon.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import org.horizon.module.system.dal.dataobject.tenant.TenantDO;
 import org.apache.ibatis.annotations.Mapper;
