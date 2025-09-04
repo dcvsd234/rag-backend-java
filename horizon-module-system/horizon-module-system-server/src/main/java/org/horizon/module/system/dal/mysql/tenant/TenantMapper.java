@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * 租户 Mapper
  *
- * @author 芋道源码
  */
 @Mapper
 public interface TenantMapper extends BaseMapperX<TenantDO> {
@@ -31,8 +30,9 @@ public interface TenantMapper extends BaseMapperX<TenantDO> {
         return selectOne(TenantDO::getName, name);
     }
 
-    default TenantDO selectByWebsite(String website) {
-        return selectOne(TenantDO::getWebsite, website);
+    default List<TenantDO> selectListByWebsite(String website) {
+        return selectList(new LambdaQueryWrapperX<TenantDO>()
+                .apply(MyBatisUtils.findInSet("websites", website)));
     }
 
     default Long selectCountByPackageId(Long packageId) {
