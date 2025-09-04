@@ -229,3 +229,9 @@ horizon:
   ai:
     base-url: http://127.0.0.1:8020
     api-key: test-key   # 可选
+
+app:
+  storage:
+    configId: 1
+    basePath: ./uploads # 确保有写权限
+    domain: http://localhost:8080   # 用于拼接返回URL
