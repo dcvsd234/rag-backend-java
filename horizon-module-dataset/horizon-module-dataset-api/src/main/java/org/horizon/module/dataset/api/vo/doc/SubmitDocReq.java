@@ -1,28 +1,45 @@
 package org.horizon.module.dataset.api.vo.doc;
 
 import lombok.Data;
-import org.horizon.module.dataset.api.enums.DocSourceType;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Map;
+import java.util.List;
 
 @Data
+
 public class SubmitDocReq {
-    @NotBlank
+
+    @NotEmpty
     private String tenantId;
 
-    @NotBlank
-    private String docTitle;
+    @NotEmpty
+    private String leafId;
 
-    @NotNull
-    private DocSourceType sourceType;   // UPLOAD / URL / PASTE
+    @Valid @NotNull
+    private DocumentReq document;
 
-    /** 文档内容三选一：content / url / objectKey(OSS) */
-    private String content;
-    private String url;
-    private String objectKey;
+    @Valid
+    private List<PackReq> packs;
 
-    /** 前端可传的元数据，如业务分类、标签等 */
-    private Map<String, Object> metadata;
+    @Data
+    public static class DocumentReq {
+        private String id;            // fileId（由上传接口返回）
+        @NotEmpty
+        private String fileName;
+        private String mimeType;
+        private Integer length;
+        private Integer pagesCount;
+    }
+
+    @Data
+    public static class PackReq {
+        private Integer idx;
+        private String id;
+        private String question;
+        private List<String> categories;
+        private Integer evCount;
+        private String status;
+    }
 }
