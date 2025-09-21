@@ -33,7 +33,7 @@
         </dependency>
         <dependency>
             <groupId>org.horizon</groupId>
-            <artifactId>horizon-module-dataset-server</artifactId>
+            <artifactId>horizon-module-knowledge-server</artifactId>
             <version>${revision}</version>
         </dependency>
         <!-- 会员中心。默认注释，保证编译速度 -->
