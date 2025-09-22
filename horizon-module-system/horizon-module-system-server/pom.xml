@@ -13,8 +13,8 @@
 
     <name>${project.artifactId}</name>
     <description>
-        system 模块下，我们放通用业务，支撑上层的核心业务。
-        例如说：用户、部门、权限、数据字典等等
+        Under the system module, we put general services to support the core business of the upper layer.
+        For example: users, departments, permissions, data dictionaries, etc
     </description>
 
     <dependencies>
@@ -36,7 +36,7 @@
             <version>${revision}</version>
         </dependency>
 
-        <!-- 业务组件 -->
+        <!-- business components -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-biz-data-permission</artifactId>
@@ -50,13 +50,13 @@
             <artifactId>horizon-spring-boot-starter-biz-ip</artifactId>
         </dependency>
 
-        <!-- Web 相关 -->
+        <!-- Web  -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- DB 相关 -->
+        <!-- DB  -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-mybatis</artifactId>
@@ -67,25 +67,25 @@
             <artifactId>horizon-spring-boot-starter-redis</artifactId>
         </dependency>
 
-        <!-- RPC 远程调用相关 -->
+        <!-- RPC  -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-rpc</artifactId>
         </dependency>
 
-        <!-- Registry 注册中心相关 -->
+        <!-- Registry  -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
-        <!-- Config 配置中心相关 -->
+        <!-- Config  -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
-        <!-- Job 定时任务相关 -->
+        <!-- Job  -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-job</artifactId>
@@ -103,14 +103,14 @@
 <!--            <artifactId>horizon-spring-boot-starter-protection</artifactId>-->
 <!--        </dependency>-->
 
-        <!-- Test 测试相关 -->
+        <!-- Test  -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- 工具类相关 -->
+        <!-- utils -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-excel</artifactId>
@@ -121,7 +121,7 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!-- 监控相关 -->
+        <!-- monitor -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-monitor</artifactId>
@@ -164,7 +164,7 @@
         <!-- 设置构建的 jar 包名 -->
         <finalName>${project.artifactId}</finalName>
         <plugins>
-            <!-- 打包 -->
+            <!-- build -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
