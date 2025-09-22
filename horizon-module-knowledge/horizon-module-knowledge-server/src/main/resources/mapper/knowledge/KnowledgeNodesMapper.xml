@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.horizon.module.knowledge.dal.dataobject.nodes.KnowledgeNodesMapper">
+
+    <resultMap id="BaseResultMap" type="org.horizon.module.knowledge.dal.dataobject.nodes.KnowledgeNodesDO">
+        <id     column="id"          property="id"/>
+        <result column="tenant_id"   property="tenantId"/>
+        <result column="name"        property="name"/>
+        <result column="parent_id"   property="parentId"/>
+        <result column="remark"      property="remark"/>
+        <result column="deleted"     property="deleted"/>
+        <result column="creator"     property="creator"/>
+        <result column="create_time" property="createTime"/>
+        <result column="updater"     property="updater"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, tenant_id, name, parent_id, remark, deleted,
+        creator, create_time, updater, update_time
+    </sql>
+
+    <!-- 统一 WHERE：默认排除已逻辑删除 -->
+    <sql id="Where_If_Present">
+        <where>
+            <if test="req == null || req.includeDeleted == null || req.includeDeleted == false">
+                AND deleted = FALSE
+            </if>
+            <if test="req != null">
+                <if test="req.tenantId != null">
+                    AND tenant_id = #{req.tenantId}
+                </if>
+                <if test="req.name != null and req.name != ''">
+                    AND name ILIKE '%' || #{req.name} || '%'
+                </if>
+                <if test="req.parentId != null">
+                    AND parent_id = #{req.parentId}
+                </if>
+                <if test="req.remark != null and req.remark != ''">
+                    AND remark = #{req.remark}
+                </if>
+                <if test="req.deleted != null">
+                    AND deleted = #{req.deleted}
+                </if>
+                <if test="req.createTime != null and req.createTime[0] != null and req.createTime[1] != null">
+                    AND create_time BETWEEN #{req.createTime[0]} AND #{req.createTime[1]}
+                </if>
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectPage" resultMap="BaseResultMap" parameterType="map">
+        SELECT <include refid="Base_Column_List"/>
+        FROM knowledge_nodes
+        <include refid="Where_If_Present"/>
+        ORDER BY id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectCount" resultType="long" parameterType="map">
+        SELECT COUNT(1)
+        FROM knowledge_nodes
+        <include refid="Where_If_Present"/>
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM knowledge_nodes
+        WHERE id = #{id}
+        LIMIT 1
+    </select>
+
+    <!-- 新增：按租户可选过滤，默认排除 deleted=TRUE -->
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM knowledge_nodes
+        <where>
+            deleted = FALSE
+            <if test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </if>
+        </where>
+        ORDER BY id
+    </select>
+
+    <!-- 修正：insert 防止 deleted/审计字段为 NULL；parent_id 为空时不写列 -->
+    <insert id="insert"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.nodes.KnowledgeNodesDO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_nodes
+        (tenant_id, name
+        <if test="parentId != null">, parent_id</if>
+        , remark, deleted, creator, create_time, updater, update_time)
+        VALUES
+        (#{tenantId}, #{name}
+        <if test="parentId != null">, #{parentId}</if>
+        , #{remark},
+        COALESCE(#{deleted}, FALSE),
+        COALESCE(#{creator}, ''),
+        COALESCE(#{createTime}, CURRENT_TIMESTAMP),
+        COALESCE(#{updater}, ''),
+        COALESCE(#{updateTime}, CURRENT_TIMESTAMP))
+    </insert>
+
+    <!-- 重命名并修正：接口是 update(...)，允许把 parent_id 置为 NULL；deleted 防空 -->
+    <update id="update"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.nodes.KnowledgeNodesDO">
+        UPDATE knowledge_nodes
+        SET tenant_id   = #{tenantId},
+        name        = #{name},
+        parent_id   = #{parentId},
+        remark      = #{remark},
+        deleted     = COALESCE(#{deleted}, deleted),
+        updater     = COALESCE(#{updater}, updater),
+        update_time = COALESCE(#{updateTime}, CURRENT_TIMESTAMP)
+        WHERE id = #{id}
+    </update>
+
+    <!-- 物理删除 -->
+    <delete id="deleteById">
+        DELETE FROM knowledge_nodes WHERE id = #{id}
+    </delete>
+
+    <!-- 新增：批量物理删除 -->
+    <delete id="deleteByIds">
+        DELETE FROM knowledge_nodes
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 逻辑删除 -->
+    <update id="logicDeleteById">
+        UPDATE knowledge_nodes
+        SET deleted = TRUE, update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>

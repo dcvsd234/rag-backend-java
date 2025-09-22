@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.horizon.framework.ai.core.dto.generate.GenerateResp;
 import org.horizon.framework.ai.core.dto.infer.InferRequest;
+import org.horizon.framework.ai.core.dto.infer.InferResponse;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -30,15 +31,14 @@ public class ModelToolsClient {
      * @param req 推理请求体
      * @return 模型生成的结果
      */
-    public GenerateResp generate(InferRequest req) {
+    public <T extends InferResponse> T generate(InferRequest req, Class<T> respClass) {
         try {
             log.info("🚀 调用模型服务 | baseUrl={} | apiKey存在? {}", baseUrl, apiKey != null);
 
-            // 简单 POST 调用
-            GenerateResp resp = restTemplate.postForObject(
+            T resp = restTemplate.postForObject(
                     baseUrl + "/infer",
                     req,
-                    GenerateResp.class
+                    respClass
             );
 
             if (resp == null) {
@@ -47,7 +47,7 @@ public class ModelToolsClient {
             return resp;
         } catch (Exception ex) {
             log.error("❌ 调用模型服务失败", ex);
-            throw ex; // 抛出去交给上层处理
+            throw ex;
         }
     }
 }

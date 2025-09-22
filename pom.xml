@@ -20,7 +20,7 @@
         <module>horizon-module-bpm</module>
         <module>horizon-module-report</module>
         <module>horizon-module-mp</module>
-        <module>horizon-module-dataset</module>
+        <module>horizon-module-knowledge</module>
         <module>horizon-cloud</module>
         <module>horizon-framework-ai</module>
         <!-- 友情提示：基于 Spring AI 实现 LLM 大模型的接入，需要使用 JDK17 版本，详细可见 https://doc.iocoder.cn/ai/build/ -->
