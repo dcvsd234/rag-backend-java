@@ -35,6 +35,11 @@
         </dependency>
         <dependency>
             <groupId>org.horizon</groupId>
+            <artifactId>horizon-module-hotpoint-server</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.horizon</groupId>
             <artifactId>horizon-module-member-server</artifactId>
             <version>${revision}</version>
         </dependency>
