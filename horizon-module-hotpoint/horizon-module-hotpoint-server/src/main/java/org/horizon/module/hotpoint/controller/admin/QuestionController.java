@@ -3,8 +3,8 @@ package org.horizon.module.hotpoint.controller.admin;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.horizon.framework.common.pojo.CommonResult;
-import org.horizon.module.hotpoint.controller.admin.vo.QuestionSaveReqVO;
-import org.horizon.module.hotpoint.service.hotpoint.HotpointService;
+import org.horizon.module.hotpoint.controller.admin.vo.question.QuestionSaveReqVO;
+import org.horizon.module.hotpoint.service.QuestionService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +19,17 @@ import org.horizon.module.knowledge.controller.admin.nodes.vo.*;
 
 @Tag(name = "admin - hotpoint")
 @RestController
-@RequestMapping("/hotpoint")
+@RequestMapping("/hotpoint/question")
 @Validated
-public class HotpointController {
+public class QuestionController {
 
     @Resource
-    private HotpointService hotpointService;
+    private QuestionService questionService;
 
-    @PostMapping("/createQuestion")
+    @PostMapping("/create")
     @Operation(summary = "创建问题")
     @PreAuthorize("@ss.hasPermission('hotpoint:question:create')")
     public CommonResult<Long> createQuestion(@Valid @RequestBody QuestionSaveReqVO createReqVO) {
-        return success(hotpointService.createQuestion(createReqVO));
+        return success(questionService.create(createReqVO));
     }
-
 }

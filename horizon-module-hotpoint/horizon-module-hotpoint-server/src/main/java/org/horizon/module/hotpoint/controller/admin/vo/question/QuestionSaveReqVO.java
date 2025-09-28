@@ -1,4 +1,4 @@
-package org.horizon.module.hotpoint.controller.admin.vo;
+package org.horizon.module.hotpoint.controller.admin.vo.question;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -22,21 +22,19 @@ public class QuestionSaveReqVO {
     private Long tenantId;
 
     @Schema(description = "问题原始内容", requiredMode = Schema.RequiredMode.REQUIRED, example = "谷歌的钻前模式？")
-    @NotEmpty(message = "问题的原始内容")
+    @NotEmpty(message = "问题的原始内容不能为空")
     private String text;
 
 
     @Schema(description = "问题格式化内容", requiredMode = Schema.RequiredMode.REQUIRED, example = "谷歌公司的赚钱模式是什么？")
-    @NotEmpty(message = "问题的格式化内容")
+    @NotEmpty(message = "问题的格式化内容不能为空")
     private String normalizedText;
 
     @Schema(description = "问题的答案", requiredMode = Schema.RequiredMode.REQUIRED, example = "广告")
-    @NotEmpty(message = "问题的答案")
+    @NotEmpty(message = "问题的答案不能为空")
     private String answerText;
 
-
-    @Schema(description = "问题被提问的次数", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotEmpty(message = "问题被提问的次数")
+    @Schema(description = "问题被提问的次数", example = "2")
     private Long askCount;
 
     @Schema(description = "用户id，表示提问的人", example = "7142")

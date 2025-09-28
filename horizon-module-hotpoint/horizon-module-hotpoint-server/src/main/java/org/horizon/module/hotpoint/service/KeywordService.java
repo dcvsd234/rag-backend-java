@@ -1,0 +1,29 @@
+package org.horizon.module.hotpoint.service;
+
+import org.horizon.module.hotpoint.controller.admin.vo.keyword.KeywordSaveReqVO;
+import org.horizon.module.hotpoint.controller.admin.vo.keyword.KeywordPageReqVO;
+import org.horizon.module.hotpoint.dal.dataobject.KeywordDO;
+
+import org.horizon.framework.common.pojo.PageResult;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+/**
+ *hotpoint Service 接口
+ */
+public interface KeywordService {
+
+    /**
+     * 创建关键词
+     * @param createReqVO 创建信息
+     * @return 关键词 ID
+     */
+    Long create(@Valid @NotNull KeywordSaveReqVO createReqVO);
+    /**
+     * 获得关键词分页列表
+     * @param reqVO 分页条件
+     * @return 关键词分页列表
+     */
+    PageResult<KeywordDO> selectPage(KeywordPageReqVO reqVO);
+
+}

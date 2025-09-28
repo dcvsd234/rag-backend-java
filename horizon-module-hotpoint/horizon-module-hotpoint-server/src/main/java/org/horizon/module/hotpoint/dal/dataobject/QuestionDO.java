@@ -1,6 +1,5 @@
 package org.horizon.module.hotpoint.dal.dataobject;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 import org.horizon.framework.mybatis.core.dataobject.BaseDO;
 
@@ -10,7 +9,6 @@ import org.horizon.framework.mybatis.core.dataobject.BaseDO;
  * 问题记录表 DO
  *
  */
-@TableName("hotpoint_questions")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -20,7 +18,7 @@ import org.horizon.framework.mybatis.core.dataobject.BaseDO;
 public class QuestionDO extends BaseDO {
 
     /**
-     * question ID
+     *  ID
      */
     private Long id;
 
@@ -33,7 +31,7 @@ public class QuestionDO extends BaseDO {
     /**
      * question text
      */
-    private String text;
+    private String question_text;
 
 
     /**
@@ -45,16 +43,6 @@ public class QuestionDO extends BaseDO {
      * answer text
      */
     private String answer_text;
-
-    /**
-     * create time
-     */
-    private String created_at;
-
-    /**
-     * updated time
-     */
-    private String updated_at;
 
     /**
      * ask count
