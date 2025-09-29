@@ -1,6 +1,7 @@
 package org.horizon.module.knowledge.service.nodes;
 
 import org.horizon.framework.common.util.object.BeanUtils;
+import org.horizon.module.knowledge.dal.mapper.nodes.KnowledgeNodesMapper;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -8,7 +9,6 @@ import java.util.List;
 
 import org.horizon.module.knowledge.controller.admin.nodes.vo.KnowledgeNodesSaveReqVO;
 import org.horizon.module.knowledge.dal.dataobject.nodes.KnowledgeNodesDO;
-import org.horizon.module.knowledge.dal.dataobject.nodes.KnowledgeNodesMapper;
 
 import static org.horizon.framework.common.exception.util.ServiceExceptionUtil.exception;
 

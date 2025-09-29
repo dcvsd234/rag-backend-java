@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.horizon.module.knowledge.dal.mapper.categoryembeddings.CategoryEmbeddingsMapper">
+
+    <!-- ================== 基础 CRUD ================== -->
+
+    <!-- 插入 -->
+    <insert id="insert"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.categoryembeddings.CategoryEmbeddingsDO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_category_embeddings (
+        category_id, model_name, model_version, provider, namespace,
+        metric, dim, embedding, deleted,
+        creator, create_time, updater, update_time
+        ) VALUES (
+        #{categoryId}, #{modelName}, #{modelVersion}, #{provider}, #{namespace},
+        #{metric}, #{dim}, #{embedding}, #{deleted},
+        #{creator}, NOW(), #{updater}, NOW()
+        )
+    </insert>
+
+    <!-- 批量插入（带向量 typeHandler） -->
+    <insert id="insertBatch" parameterType="list">
+        INSERT INTO knowledge_category_embeddings (
+        category_id, model_name, model_version, provider, namespace,
+        metric, dim, embedding, deleted,
+        creator, create_time, updater, update_time
+        ) VALUES
+        <foreach collection="list" item="e" separator=",">
+            (
+            #{e.categoryId}, #{e.modelName}, #{e.modelVersion}, #{e.provider}, #{e.namespace},
+            #{e.metric}, #{e.dim},
+            #{e.embedding, typeHandler=org.horizon.module.knowledge.dal.type.PgVectorTypeHandler},
+            COALESCE(#{e.deleted}, FALSE),
+            #{e.creator}, NOW(), #{e.updater}, NOW()
+            )
+        </foreach>
+        ON CONFLICT (category_id, model_name, namespace) DO NOTHING
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateById"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.categoryembeddings.CategoryEmbeddingsDO">
+        UPDATE knowledge_category_embeddings
+        SET category_id   = #{categoryId},
+        model_name    = #{modelName},
+        model_version = #{modelVersion},
+        provider      = #{provider},
+        namespace     = #{namespace},
+        metric        = #{metric},
+        dim           = #{dim},
+        embedding     = #{embedding},
+        deleted       = #{deleted},
+        updater       = #{updater},
+        update_time   = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除（单条） -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM knowledge_category_embeddings WHERE id = #{id}
+    </delete>
+
+    <!-- 删除（批量） -->
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM knowledge_category_embeddings
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询（单条） -->
+    <select id="selectById" parameterType="long"
+            resultType="org.horizon.module.knowledge.dal.dataobject.categoryembeddings.CategoryEmbeddingsDO">
+        SELECT
+        id, category_id, model_name, model_version, provider, namespace,
+        metric, dim, embedding, deleted,
+        creator, create_time, updater, update_time
+        FROM knowledge_category_embeddings
+        WHERE id = #{id}
+    </select>
+
+    <!-- ================== 分页（列表 + 统计） ================== -->
+
+    <!-- 列表 -->
+    <select id="selectPageList"
+            parameterType="org.horizon.module.knowledge.controller.admin.categoryembeddings.vo.CategoryEmbeddingsPageReqVO"
+            resultType="org.horizon.module.knowledge.dal.dataobject.categoryembeddings.CategoryEmbeddingsDO">
+        SELECT
+        id, category_id, model_name, model_version, provider, namespace,
+        metric, dim, embedding, deleted,
+        creator, create_time, updater, update_time
+        FROM knowledge_category_embeddings
+        <where>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name = #{modelName}
+            </if>
+            <if test="namespace != null and namespace != ''">
+                AND namespace = #{namespace}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{pageSize} OFFSET #{(pageNo - 1) * pageSize}
+    </select>
+
+    <!-- 统计 -->
+    <select id="selectPageCount"
+            parameterType="org.horizon.module.knowledge.controller.admin.categoryembeddings.vo.CategoryEmbeddingsPageReqVO"
+            resultType="long">
+        SELECT COUNT(*)
+        FROM knowledge_category_embeddings
+        <where>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name = #{modelName}
+            </if>
+            <if test="namespace != null and namespace != ''">
+                AND namespace = #{namespace}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+    </select>
+
+</mapper>

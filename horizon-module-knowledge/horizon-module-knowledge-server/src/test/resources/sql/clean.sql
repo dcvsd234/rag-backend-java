@@ -1,1 +1,0 @@
-DELETE FROM "knowledge_nodes";
