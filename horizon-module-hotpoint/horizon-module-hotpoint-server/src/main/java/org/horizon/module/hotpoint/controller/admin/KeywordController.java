@@ -40,7 +40,7 @@ public class KeywordController {
     @Operation(summary = "获取关键词分页列表")
     @PreAuthorize("@ss.hasPermission('hotpoint:keyword:query')")
     public CommonResult<PageResult<KeywordRespVO>> getKeywordsPage(@Validated KeywordPageReqVO pageReqVO) {
-        PageResult<KeywordDO> pageResult = keywordService.getKeywordPage(pageReqVO);
+        PageResult<KeywordDO> pageResult = keywordService.selectPage(pageReqVO);
         return success(BeanUtils.toBean(pageResult, KeywordRespVO.class));
     }
 

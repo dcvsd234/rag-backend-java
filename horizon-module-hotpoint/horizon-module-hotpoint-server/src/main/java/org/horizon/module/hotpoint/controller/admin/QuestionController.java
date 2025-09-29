@@ -15,8 +15,6 @@ import javax.validation.Valid;
 import static org.horizon.framework.common.pojo.CommonResult.success;
 
 
-import org.horizon.module.knowledge.controller.admin.nodes.vo.*;
-
 @Tag(name = "admin - hotpoint")
 @RestController
 @RequestMapping("/hotpoint/question")

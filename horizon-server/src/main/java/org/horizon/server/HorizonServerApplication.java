@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 项目的启动类
  */
 @SuppressWarnings("SpringComponentScan") // 忽略 IDEA 无法识别 ${horizon.info.base-package}
-@SpringBootApplication(scanBasePackages = {"${horizon.info.base-package}.server", "${horizon.info.base-package}.module", "org.horizon.framework.ai", "org.horizon.module.knowledge"},
+@SpringBootApplication(scanBasePackages = {"${horizon.info.base-package}.server", "${horizon.info.base-package}.module", "org.horizon.framework.ai", "org.horizon.module.knowledge", "org.horizon.module.hotpoint"},
         excludeName = {
             // RPC 相关
 //            "org.springframework.cloud.openfeign.FeignAutoConfiguration",
