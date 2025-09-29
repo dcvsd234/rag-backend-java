@@ -13,7 +13,6 @@
 
     <name>${project.artifactId}</name>
     <description>数据库连接池、多数据源、事务、MyBatis 拓展</description>
-    <url>https://github.com/YunaiV/ruoyi-vue-pro</url>
 
     <dependencies>
         <dependency>
@@ -41,7 +40,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.3</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.horizon.module.hotpoint.mapper.QuestionKeywordMapper">
+
+    <insert id="insert" parameterType="org.horizon.module.hotpoint.dal.dataobject.QuestionKeywordDO">
+        INSERT INTO hotpoint_question_keywords (question_id, keyword_id)
+        VALUES ( #{questionId}, #{keywordId} )
+    </insert>
+
+
+</mapper>

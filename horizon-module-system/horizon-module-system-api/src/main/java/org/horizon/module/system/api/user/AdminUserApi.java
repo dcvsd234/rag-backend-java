@@ -56,6 +56,7 @@ public interface AdminUserApi extends AutoTransable<AdminUserRespDTO> {
      * @param ids 用户编号数组
      * @return 用户 Map
      */
+
     default Map<Long, AdminUserRespDTO> getUserMap(Collection<Long> ids) {
         List<AdminUserRespDTO> users = getUserList(ids).getCheckedData();
         return CollectionUtils.convertMap(users, AdminUserRespDTO::getId);

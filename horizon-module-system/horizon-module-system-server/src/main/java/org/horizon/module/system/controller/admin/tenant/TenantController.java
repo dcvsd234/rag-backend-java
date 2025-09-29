@@ -37,8 +37,7 @@ public class TenantController {
 
     @Resource
     private TenantService tenantService;
-
-    @GetMapping("/get-id-by-name")
+     @GetMapping("/get-id-by-name")
     @PermitAll
     @TenantIgnore
     @Operation(summary = "使用租户名，获得租户编号", description = "登录界面，根据用户的租户名，获得租户编号")
