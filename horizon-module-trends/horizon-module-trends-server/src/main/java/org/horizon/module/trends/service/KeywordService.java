@@ -13,13 +13,6 @@ import javax.validation.constraints.NotNull;
  *trends Service 接口
  */
 public interface KeywordService {
-
-    /**
-     * 创建关键词
-     * @param createReqVO 创建信息
-     * @return 关键词 ID
-     */
-    Long create(@Valid @NotNull KeywordSaveReqVO createReqVO);
     /**
      * 获得关键词分页列表
      * @param reqVO 分页条件

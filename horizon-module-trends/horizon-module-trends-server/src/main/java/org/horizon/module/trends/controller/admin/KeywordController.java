@@ -28,13 +28,6 @@ public class KeywordController {
     @Resource
     private KeywordService keywordService;
 
-    @PostMapping("/create")
-    @Operation(summary = "创建关键词")
-    @PreAuthorize("@ss.hasPermission('trends:keyword:create')")
-    public CommonResult<Long> create(@Valid @RequestBody KeywordSaveReqVO createReqVO) {
-        return success(keywordService.create(createReqVO));
-    }
-
     @GetMapping("/page")
     @Operation(summary = "获取关键词分页列表")
     @PreAuthorize("@ss.hasPermission('trends:keyword:query')")
@@ -42,5 +35,4 @@ public class KeywordController {
         PageResult<KeywordDO> pageResult = keywordService.selectPage(pageReqVO);
         return success(BeanUtils.toBean(pageResult, KeywordRespVO.class));
     }
-
 }

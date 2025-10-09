@@ -26,13 +26,6 @@ public class KeywordServiceImpl implements KeywordService {
     private KeywordMapper keywordMapper;
 
     @Override
-    public Long create(KeywordSaveReqVO createReqVO) {
-        KeywordDO keyword = BeanUtils.toBean(createReqVO, KeywordDO.class);
-        keywordMapper.insert(keyword);
-        return keyword.getId();
-    }
-
-    @Override
     public PageResult<KeywordDO> selectPage(KeywordPageReqVO pageReqVO) {
         Long tenantId = SecurityFrameworkUtils.getLoginUser().getTenantId();
         // 计算分页参数
