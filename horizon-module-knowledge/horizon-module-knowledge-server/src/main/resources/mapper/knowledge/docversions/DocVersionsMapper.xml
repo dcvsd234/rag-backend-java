@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.horizon.module.knowledge.dal.mapper.docversions.DocVersionsMapper">
+
+    <!-- ========== 插入 ========== -->
+    <insert id="insert"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.docversions.DocVersionsDO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_doc_versions
+        (knowledge_docs_id, infra_file_id, version_no, summary, remark,
+        creator, create_time, updater, update_time)
+        VALUES
+        (#{knowledgeDocsId}, #{infraFileId}, #{versionNo}, #{summary}, #{remark},
+        #{creator}, NOW(), #{updater}, NOW())
+    </insert>
+
+    <!-- ========== 按主键更新 ========== -->
+    <update id="updateById"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.docversions.DocVersionsDO">
+        UPDATE knowledge_doc_versions
+        SET
+        knowledge_docs_id = #{knowledgeDocsId},
+        infra_file_id     = #{infraFileId},
+        version_no        = #{versionNo},
+        summary           = #{summary},
+        remark            = #{remark},
+        deleted           = #{deleted},
+        updater           = #{updater},
+        update_time       = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!--
+      ========== 基于 id 设定 knowledge_docs_id，并自动生成纯数字版 version_no ==========
+      逻辑：version_no = 当前 knowledge_docs_id 下已存在的最大 version_no(按整数解析) + 1
+      注意：若并发同时更新同一 knowledge_docs_id，可能产生相同版本号，建议在库层加唯一约束：
+        UNIQUE (knowledge_docs_id, version_no)
+      并在业务侧重试。
+    -->
+    <update id="updateKnowledgeDocsIdById"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.docversions.DocVersionsDO">
+        UPDATE knowledge_doc_versions v
+        SET
+        knowledge_docs_id = #{knowledgeDocsId},
+        version_no = (
+        SELECT (COALESCE(MAX(version_no::int), 0) + 1)::varchar
+        FROM knowledge_doc_versions
+        WHERE knowledge_docs_id = #{knowledgeDocsId}
+        AND deleted = FALSE
+        ),
+        updater = #{updater},
+        update_time = NOW()
+        WHERE v.id = #{id}
+    </update>
+
+    <!-- ========== 删除（单条） ========== -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM knowledge_doc_versions WHERE id = #{id}
+    </delete>
+
+    <!-- ========== 删除（批量） ========== -->
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM knowledge_doc_versions
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- ========== 查询单条 ========== -->
+    <select id="selectById"
+            resultType="org.horizon.module.knowledge.dal.dataobject.docversions.DocVersionsDO">
+        SELECT
+        id,
+        knowledge_docs_id AS knowledgeDocsId,
+        infra_file_id     AS infraFileId,
+        version_no        AS versionNo,
+        summary,
+        remark,
+        deleted,
+        creator,
+        create_time       AS createTime,
+        updater,
+        update_time       AS updateTime
+        FROM knowledge_doc_versions
+        WHERE id = #{id}
+    </select>
+
+    <!-- ========== 分页列表 ========== -->
+    <select id="selectPageList"
+            resultType="org.horizon.module.knowledge.dal.dataobject.docversions.DocVersionsDO">
+        SELECT
+        id,
+        knowledge_docs_id AS knowledgeDocsId,
+        infra_file_id     AS infraFileId,
+        version_no        AS versionNo,
+        summary,
+        remark,
+        deleted,
+        creator,
+        create_time       AS createTime,
+        updater,
+        update_time       AS updateTime
+        FROM knowledge_doc_versions
+        <where>
+            <if test="reqVO.knowledgeDocsId != null">
+                AND knowledge_docs_id = #{reqVO.knowledgeDocsId}
+            </if>
+            <if test="reqVO.versionNo != null and reqVO.versionNo != ''">
+                AND version_no = #{reqVO.versionNo}
+            </if>
+            <if test="reqVO.deleted != null">
+                AND deleted = #{reqVO.deleted}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+        LIMIT #{reqVO.pageSize} OFFSET #{(reqVO.pageNo - 1) * reqVO.pageSize}
+    </select>
+
+    <!-- ========== 分页统计 ========== -->
+    <select id="selectPageCount" resultType="long">
+        SELECT COUNT(*)
+        FROM knowledge_doc_versions
+        <where>
+            <if test="reqVO.knowledgeDocsId != null">
+                AND knowledge_docs_id = #{reqVO.knowledgeDocsId}
+            </if>
+            <if test="reqVO.versionNo != null and reqVO.versionNo != ''">
+                AND version_no = #{reqVO.versionNo}
+            </if>
+            <if test="reqVO.deleted != null">
+                AND deleted = #{reqVO.deleted}
+            </if>
+        </where>
+    </select>
+
+</mapper>

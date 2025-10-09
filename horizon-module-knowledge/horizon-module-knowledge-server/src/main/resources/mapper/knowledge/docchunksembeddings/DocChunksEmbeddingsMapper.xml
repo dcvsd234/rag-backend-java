@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.horizon.module.knowledge.dal.mapper.docchunksembeddings.DocChunksEmbeddingsMapper">
+
+    <!-- ================== 基础 CRUD ================== -->
+
+    <!-- 插入 -->
+    <insert id="insert" parameterType="org.horizon.module.knowledge.dal.dataobject.docchunksembeddings.DocChunksEmbeddingsDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_doc_chunks_embeddings (
+        chunk_id, model_name, model_version, provider, namespace,
+        metric, dim, embedding, deleted,
+        creator, create_time, updater, update_time
+        ) VALUES (
+        #{chunkId}, #{modelName}, #{modelVersion}, #{provider}, #{namespace},
+        #{metric}, #{dim}, #{embedding}, #{deleted},
+        #{creator}, #{createTime}, #{updater}, #{updateTime}
+        )
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch">
+        INSERT INTO knowledge_doc_chunks_embeddings (
+        chunk_id, model_name, model_version, provider, namespace,
+        metric, dim, embedding, deleted,
+        creator, create_time, updater, update_time
+        ) VALUES
+        <foreach collection="list" item="e" separator=",">
+            (
+            #{e.chunkId},
+            #{e.modelName},
+            #{e.modelVersion},
+            #{e.provider},
+            #{e.namespace},
+            #{e.metric},
+            #{e.dim},
+            #{e.embedding, typeHandler=org.horizon.module.knowledge.dal.type.PgVectorTypeHandler},
+            #{e.deleted},
+            #{e.creator}, NOW(),
+            #{e.updater}, NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateById" parameterType="org.horizon.module.knowledge.dal.dataobject.docchunksembeddings.DocChunksEmbeddingsDO">
+        UPDATE knowledge_doc_chunks_embeddings
+        SET chunk_id      = #{chunkId},
+        model_name    = #{modelName},
+        model_version = #{modelVersion},
+        provider      = #{provider},
+        namespace     = #{namespace},
+        metric        = #{metric},
+        dim           = #{dim},
+        embedding     = #{embedding},
+        deleted       = #{deleted},
+        creator       = #{creator},
+        create_time   = #{createTime},
+        updater       = #{updater},
+        update_time   = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除（单条） -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM knowledge_doc_chunks_embeddings WHERE id = #{id}
+    </delete>
+
+    <!-- 删除（批量） -->
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM knowledge_doc_chunks_embeddings WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询（单条） -->
+    <select id="selectById" parameterType="long" resultType="org.horizon.module.knowledge.dal.dataobject.docchunksembeddings.DocChunksEmbeddingsDO">
+        SELECT *
+        FROM knowledge_doc_chunks_embeddings
+        WHERE id = #{id}
+    </select>
+
+    <!-- ================== 分页查询 ================== -->
+
+    <!-- 列表 -->
+    <select id="selectPageList" parameterType="org.horizon.module.knowledge.controller.admin.docchunksembeddings.vo.DocChunksEmbeddingsPageReqVO"
+            resultType="org.horizon.module.knowledge.dal.dataobject.docchunksembeddings.DocChunksEmbeddingsDO">
+        SELECT *
+        FROM knowledge_doc_chunks_embeddings
+        <where>
+            <if test="chunkId != null">
+                AND chunk_id = #{chunkId}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name = #{modelName}
+            </if>
+            <if test="namespace != null and namespace != ''">
+                AND namespace = #{namespace}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{pageSize} OFFSET #{(pageNo - 1) * pageSize}
+    </select>
+
+    <!-- 统计 -->
+    <select id="selectPageCount" parameterType="org.horizon.module.knowledge.controller.admin.docchunksembeddings.vo.DocChunksEmbeddingsPageReqVO" resultType="long">
+        SELECT COUNT(*)
+        FROM knowledge_doc_chunks_embeddings
+        <where>
+            <if test="chunkId != null">
+                AND chunk_id = #{chunkId}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name = #{modelName}
+            </if>
+            <if test="namespace != null and namespace != ''">
+                AND namespace = #{namespace}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+    </select>
+
+</mapper>

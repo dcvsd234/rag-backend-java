@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.horizon.module.knowledge.dal.mapper.faqcategorylinks.FaqCategoryLinksMapper">
+
+    <!-- ====== 插入（单条） ====== -->
+    <insert id="insert"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.faqcategorylinks.FaqCategoryLinksDO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_faq_category_links (
+        tenant_id,
+        faq_id,
+        category_id,
+        confidence,
+        link_source,
+        deleted,
+        creator, create_time,
+        updater, update_time
+        ) VALUES (
+        #{tenantId},
+        #{faqId},
+        #{categoryId},
+        COALESCE(#{confidence}, 1.0),
+        COALESCE(#{linkSource}, 'manual'),
+        COALESCE(#{deleted}, FALSE),
+        #{creator}, NOW(),
+        #{updater}, NOW()
+        )
+    </insert>
+
+    <!-- ====== 批量插入（唯一键冲突则跳过） ====== -->
+    <insert id="insertBatch" parameterType="list">
+        INSERT INTO knowledge_faq_category_links (
+        tenant_id,
+        faq_id,
+        category_id,
+        confidence,
+        link_source,
+        deleted,
+        creator, create_time,
+        updater, update_time
+        ) VALUES
+        <foreach collection="list" item="e" separator=",">
+            (
+            #{e.tenantId},
+            #{e.faqId},
+            #{e.categoryId},
+            COALESCE(#{e.confidence}, 1.0),
+            COALESCE(#{e.linkSource}, 'manual'),
+            COALESCE(#{e.deleted}, FALSE),
+            #{e.creator}, NOW(),
+            #{e.updater}, NOW()
+            )
+        </foreach>
+        ON CONFLICT ON CONSTRAINT uq_kfcl_tenant_faq_category DO NOTHING
+    </insert>
+
+    <!-- ====== 更新 ====== -->
+    <update id="updateById"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.faqcategorylinks.FaqCategoryLinksDO">
+        UPDATE knowledge_faq_category_links
+        SET
+        tenant_id   = #{tenantId},
+        faq_id      = #{faqId},
+        category_id = #{categoryId},
+        confidence  = #{confidence},
+        link_source = #{linkSource},
+        deleted     = #{deleted},
+        updater     = #{updater},
+        update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- ====== 删除（单个） ====== -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM knowledge_faq_category_links WHERE id = #{id}
+    </delete>
+
+    <!-- ====== 删除（批量） ====== -->
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM knowledge_faq_category_links
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- ====== 查询（单个） ====== -->
+    <select id="selectById" parameterType="long"
+            resultType="org.horizon.module.knowledge.dal.dataobject.faqcategorylinks.FaqCategoryLinksDO">
+        SELECT
+        id,
+        tenant_id,
+        faq_id,
+        category_id,
+        confidence,
+        link_source,
+        deleted,
+        creator, create_time,
+        updater, update_time
+        FROM knowledge_faq_category_links
+        WHERE id = #{id}
+    </select>
+
+    <!-- ====== 分页列表 ====== -->
+    <select id="selectPageList"
+            parameterType="org.horizon.module.knowledge.controller.admin.faqcategorylinks.vo.FaqCategoryLinksPageReqVO"
+            resultType="org.horizon.module.knowledge.dal.dataobject.faqcategorylinks.FaqCategoryLinksDO">
+        SELECT
+        id,
+        tenant_id,
+        faq_id,
+        category_id,
+        confidence,
+        link_source,
+        deleted,
+        creator, create_time,
+        updater, update_time
+        FROM knowledge_faq_category_links
+        <where>
+            <if test="faqId != null">
+                AND faq_id = #{faqId}
+            </if>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{pageSize} OFFSET #{(pageNo - 1) * pageSize}
+    </select>
+
+    <!-- ====== 分页统计 ====== -->
+    <select id="selectPageCount"
+            parameterType="org.horizon.module.knowledge.controller.admin.faqcategorylinks.vo.FaqCategoryLinksPageReqVO"
+            resultType="long">
+        SELECT COUNT(1)
+        FROM knowledge_faq_category_links
+        <where>
+            <if test="faqId != null">
+                AND faq_id = #{faqId}
+            </if>
+            <if test="categoryId != null">
+                AND category_id = #{categoryId}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+    </select>
+
+</mapper>

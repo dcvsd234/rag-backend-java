@@ -12,12 +12,12 @@ import java.util.List;
 @Data
 public class SubmitDocReqVO {
 
-    @Schema(description = "文档数据库 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "12345")
+    @Schema(description = "文档数据库 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotEmpty
-    private String dbId;
+    private String infraFileId;
 
     @Schema(description = "存储 Key（MinIO 中的路径）", requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "tenant/leaf/202509/uuid.pdf")
+            example = "1/leaf-labor/20250913/test_1757757130425.md")
     @NotEmpty
     private String key;
 

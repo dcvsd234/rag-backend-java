@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.horizon.module.knowledge.dal.mapper.faqembeddings.FaqEmbeddingsMapper">
+
+    <!-- ================== 基础 CRUD ================== -->
+
+    <!-- 单条插入 -->
+    <insert id="insert"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.faqembeddings.FaqEmbeddingsDO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_faq_embeddings (
+        faq_id,
+        qa_role,
+        model_name,
+        model_version,
+        provider,
+        namespace,
+        metric,
+        dim,
+        embedding,
+        deleted,
+        creator,
+        create_time,
+        updater,
+        update_time
+        ) VALUES (
+        #{faqId},
+        #{qaRole},
+        #{modelName},
+        #{modelVersion},
+        #{provider},
+        #{namespace},
+        #{metric},
+        #{dim},
+        #{embedding},
+        COALESCE(#{deleted}, FALSE),
+        #{creator},
+        NOW(),
+        #{updater},
+        NOW()
+        )
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch"
+            parameterType="list"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_faq_embeddings (
+        faq_id,
+        qa_role,
+        model_name,
+        model_version,
+        provider,
+        namespace,
+        metric,
+        dim,
+        embedding,
+        deleted,
+        creator,
+        create_time,
+        updater,
+        update_time
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.faqId},
+            #{item.qaRole},
+            #{item.modelName},
+            #{item.modelVersion},
+            #{item.provider},
+            #{item.namespace},
+            #{item.metric},
+            #{item.dim},
+            #{item.embedding},
+            COALESCE(#{item.deleted}, FALSE),
+            #{item.creator},
+            NOW(),
+            #{item.updater},
+            NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateById"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.faqembeddings.FaqEmbeddingsDO">
+        UPDATE knowledge_faq_embeddings
+        SET
+        faq_id        = #{faqId},
+        qa_role       = #{qaRole},
+        model_name    = #{modelName},
+        model_version = #{modelVersion},
+        provider      = #{provider},
+        namespace     = #{namespace},
+        metric        = #{metric},
+        dim           = #{dim},
+        embedding     = #{embedding},
+        deleted       = #{deleted},
+        updater       = #{updater},
+        update_time   = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除（单条） -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM knowledge_faq_embeddings WHERE id = #{id}
+    </delete>
+
+    <!-- 删除（批量） -->
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM knowledge_faq_embeddings
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询（单条） -->
+    <select id="selectById" parameterType="long"
+            resultType="org.horizon.module.knowledge.dal.dataobject.faqembeddings.FaqEmbeddingsDO">
+        SELECT
+        id,
+        faq_id,
+        qa_role,
+        model_name,
+        model_version,
+        provider,
+        namespace,
+        metric,
+        dim,
+        embedding,
+        deleted,
+        creator,
+        create_time,
+        updater,
+        update_time
+        FROM knowledge_faq_embeddings
+        WHERE id = #{id}
+    </select>
+
+    <!-- ================== 分页（列表 + 统计） ================== -->
+
+    <!-- 列表 -->
+    <select id="selectPageList"
+            parameterType="org.horizon.module.knowledge.controller.admin.faqembeddings.vo.FaqEmbeddingsPageReqVO"
+            resultType="org.horizon.module.knowledge.dal.dataobject.faqembeddings.FaqEmbeddingsDO">
+        SELECT
+        id,
+        faq_id,
+        qa_role,
+        model_name,
+        model_version,
+        provider,
+        namespace,
+        metric,
+        dim,
+        embedding,
+        deleted,
+        creator,
+        create_time,
+        updater,
+        update_time
+        FROM knowledge_faq_embeddings
+        <where>
+            <if test="faqId != null">
+                AND faq_id = #{faqId}
+            </if>
+            <if test="qaRole != null">
+                AND qa_role = #{qaRole}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name = #{modelName}
+            </if>
+            <if test="namespace != null and namespace != ''">
+                AND namespace = #{namespace}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{pageSize} OFFSET #{(pageNo - 1) * pageSize}
+    </select>
+
+    <!-- 统计 -->
+    <select id="selectPageCount"
+            parameterType="org.horizon.module.knowledge.controller.admin.faqembeddings.vo.FaqEmbeddingsPageReqVO"
+            resultType="long">
+        SELECT COUNT(*)
+        FROM knowledge_faq_embeddings
+        <where>
+            <if test="faqId != null">
+                AND faq_id = #{faqId}
+            </if>
+            <if test="qaRole != null">
+                AND qa_role = #{qaRole}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name = #{modelName}
+            </if>
+            <if test="namespace != null and namespace != ''">
+                AND namespace = #{namespace}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+    </select>
+
+</mapper>

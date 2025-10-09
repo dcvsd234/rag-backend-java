@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.horizon.module.knowledge.dal.mapper.docs.DocsMapper">
+
+    <!-- 映射字段 -->
+    <resultMap id="DocsResultMap" type="org.horizon.module.knowledge.dal.dataobject.docs.DocsDO">
+        <id column="id" property="id"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="node_id" property="nodeId"/>
+        <result column="active_version_id" property="activeVersionId"/>
+        <result column="attribution_name" property="attributionName"/>
+        <result column="display_flag" property="displayFlag"/>
+        <result column="remark" property="remark"/>
+        <result column="creator" property="creator"/>
+        <result column="create_time" property="createTime"/>
+        <result column="updater" property="updater"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <!-- 插入 -->
+    <insert id="insert" parameterType="org.horizon.module.knowledge.dal.dataobject.docs.DocsDO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_docs (
+        tenant_id, node_id, active_version_id, attribution_name,
+        display_flag, remark, creator, create_time, updater, update_time, deleted
+        ) VALUES (
+        #{tenantId}, #{nodeId}, #{activeVersionId}, #{attributionName},
+        #{displayFlag}, #{remark}, #{creator}, NOW(), #{updater}, NOW(), #{deleted}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateById" parameterType="org.horizon.module.knowledge.dal.dataobject.docs.DocsDO">
+        UPDATE knowledge_docs
+        SET
+        tenant_id = #{tenantId},
+        node_id = #{nodeId},
+        active_version_id = #{activeVersionId},
+        attribution_name = #{attributionName},
+        display_flag = #{displayFlag},
+        remark = #{remark},
+        updater = #{updater},
+        update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM knowledge_docs WHERE id = #{id}
+    </delete>
+
+    <!-- 批量删除 -->
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM knowledge_docs WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询单个 -->
+    <select id="selectById" resultMap="DocsResultMap" parameterType="long">
+        SELECT * FROM knowledge_docs WHERE id = #{id}
+    </select>
+
+    <!-- 查询列表（按租户过滤） -->
+    <select id="selectList" resultMap="DocsResultMap" parameterType="long">
+        SELECT * FROM knowledge_docs WHERE tenant_id = #{tenantId}
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="selectPage" resultMap="DocsResultMap" parameterType="org.horizon.module.knowledge.controller.admin.docs.vo.DocsPageReqVO">
+        SELECT * FROM knowledge_docs
+        <where>
+            <if test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </if>
+            <!-- 如 VO 中保留了 title，则可加入下列语句；否则删除 -->
+            <!--
+            <if test="title != null and title != ''">
+                AND EXISTS (
+                    SELECT 1 FROM knowledge_doc_versions v
+                    WHERE v.id = knowledge_docs.active_version_id AND v.title LIKE CONCAT('%', #{title}, '%')
+                )
+            </if>
+            -->
+        </where>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

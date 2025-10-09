@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.horizon.module.knowledge.dal.mapper.docchunks.DocChunksMapper">
+
+    <!-- ========== 通用 resultMap（列 <-> DO 属性一一对应） ========== -->
+    <resultMap id="DocChunksResultMap" type="org.horizon.module.knowledge.dal.dataobject.docchunks.DocChunksDO">
+        <id     property="id"                        column="id"/>
+        <result property="knowledgeDocVersionsId"    column="knowledge_doc_versions_id"/>
+        <result property="text"                      column="text"/>
+        <result property="chunkIndex"                column="chunk_index"/>
+        <result property="startOffset"               column="start_offset"/>
+        <result property="endOffset"                 column="end_offset"/>
+        <result property="pageNo"                    column="page_no"/>
+        <result property="headingPath"               column="heading_path"/>
+        <result property="sourceChunkId"             column="source_chunk_id"/>  <!-- 新增映射 -->
+        <result property="remark"                    column="remark"/>
+        <result property="deleted"                   column="deleted"/>
+        <result property="creator"                   column="creator"/>
+        <result property="createTime"                column="create_time"/>
+        <result property="updater"                   column="updater"/>
+        <result property="updateTime"                column="update_time"/>
+    </resultMap>
+
+    <!-- ========== 单条插入 ========== -->
+    <insert id="insert"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.docchunks.DocChunksDO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO knowledge_doc_chunks (
+        knowledge_doc_versions_id,
+        text,
+        chunk_index,
+        start_offset,
+        end_offset,
+        page_no,
+        heading_path,
+        source_chunk_id,       -- 新增列
+        remark,
+        deleted,
+        creator,
+        create_time,
+        updater,
+        update_time
+        ) VALUES (
+        #{knowledgeDocVersionsId},
+        #{text},
+        #{chunkIndex},
+        #{startOffset},
+        #{endOffset},
+        #{pageNo},
+        #{headingPath},
+        #{sourceChunkId},      -- 新增值
+        #{remark},
+        COALESCE(#{deleted}, FALSE),
+        #{creator},
+        NOW(),
+        #{updater},
+        NOW()
+        )
+    </insert>
+
+    <!-- ========== 批量插入 ========== -->
+    <insert id="insertBatch"
+            parameterType="list"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO knowledge_doc_chunks (
+        knowledge_doc_versions_id,
+        text,
+        chunk_index,
+        start_offset,
+        end_offset,
+        page_no,
+        heading_path,
+        source_chunk_id,       -- 新增列
+        remark,
+        deleted,
+        creator,
+        create_time,
+        updater,
+        update_time
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.knowledgeDocVersionsId},
+            #{item.text},
+            #{item.chunkIndex},
+            #{item.startOffset},
+            #{item.endOffset},
+            #{item.pageNo},
+            #{item.headingPath},
+            #{item.sourceChunkId},  -- 新增值
+            #{item.remark},
+            COALESCE(#{item.deleted}, FALSE),
+            #{item.creator},
+            NOW(),
+            #{item.updater},
+            NOW()
+            )
+        </foreach>
+    </insert>
+
+    <!-- ========== 按 ID 更新 ========== -->
+    <update id="updateById"
+            parameterType="org.horizon.module.knowledge.dal.dataobject.docchunks.DocChunksDO">
+        UPDATE knowledge_doc_chunks
+        SET
+        knowledge_doc_versions_id = #{knowledgeDocVersionsId},
+        text           = #{text},
+        chunk_index    = #{chunkIndex},
+        start_offset   = #{startOffset},
+        end_offset     = #{endOffset},
+        page_no        = #{pageNo},
+        heading_path   = #{headingPath},
+        source_chunk_id= #{sourceChunkId},   -- 新增字段
+        remark         = #{remark},
+        deleted        = #{deleted},
+        updater        = #{updater},
+        update_time    = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- ========== 删除（单条/批量） ========== -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM knowledge_doc_chunks WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM knowledge_doc_chunks
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- ========== 查询单条 ========== -->
+    <select id="selectById" parameterType="long" resultMap="DocChunksResultMap">
+        SELECT *
+        FROM knowledge_doc_chunks
+        WHERE id = #{id}
+    </select>
+
+    <!-- ========== 分页（列表 + 统计） ========== -->
+    <select id="selectPageList"
+            parameterType="org.horizon.module.knowledge.controller.admin.docchunks.vo.DocChunksPageReqVO"
+            resultMap="DocChunksResultMap">
+        SELECT *
+        FROM knowledge_doc_chunks
+        WHERE deleted = FALSE
+        <if test="knowledgeDocVersionsId != null">
+            AND knowledge_doc_versions_id = #{knowledgeDocVersionsId}
+        </if>
+        <if test="pageNo != null and pageSize != null">
+            ORDER BY id DESC
+            LIMIT #{pageSize} OFFSET #{(pageNo - 1) * pageSize}
+        </if>
+    </select>
+
+    <select id="selectPageCount"
+            parameterType="org.horizon.module.knowledge.controller.admin.docchunks.vo.DocChunksPageReqVO"
+            resultType="long">
+        SELECT COUNT(*)
+        FROM knowledge_doc_chunks
+        WHERE deleted = FALSE
+        <if test="knowledgeDocVersionsId != null">
+            AND knowledge_doc_versions_id = #{knowledgeDocVersionsId}
+        </if>
+    </select>
+
+</mapper>

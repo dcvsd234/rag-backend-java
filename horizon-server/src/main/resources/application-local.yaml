@@ -14,17 +14,17 @@ spring:
 
       primary: master
       hikari:
-        maximum-pool-size: 5
-        minimum-idle: 0
+        maximum-pool-size: 10
+        minimum-idle: 2
         idle-timeout: 600000        # 10 分钟
         max-lifetime: 1800000       # 30 分钟
         connection-timeout: 30000   # 30 秒
         keepalive-time: 300000      # 5min，空闲也会做心跳（Hikari 4+ 支持）
-        leak-detection-threshold: 20000 # 20s 执行还不归还连接就告警（定位泄漏）
+        leak-detection-threshold: 0 # 20s 执行还不归还连接就告警（定位泄漏）
         pool-name: horizon-hikari
       datasource:
         master:
-          url: jdbc:postgresql://46.250.250.0:5432/rag_postgres # PostgreSQL 连接的示例
+          url: jdbc:postgresql://46.250.250.0:5432/rag_postgres
           username: myappuser
           password: rag2025ffree
           driver-class-name: org.postgresql.Driver
