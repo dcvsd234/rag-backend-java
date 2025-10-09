@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.horizon</groupId>
+        <artifactId>horizon-module-trends</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <artifactId>horizon-module-trends-server</artifactId>
+    <packaging>jar</packaging>
+
+    <description> trends </description>
+
+    <!-- business components -->
+    <dependencies>
+        <!--  cloud base-->
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-env</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-biz-ip</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-biz-data-permission</artifactId>
+        </dependency>
+
+        <!-- Web 相关 -->
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- DB 相关 -->
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-mybatis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-redis</artifactId>
+        </dependency>
+
+
+        <!-- Test 测试相关 -->
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 工具类相关 -->
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-excel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-gateway</artifactId>
+            <version>2025.08-jdk8-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>
