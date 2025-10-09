@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.horizon.module.qa.dal.mapper.useranswers.UserAnswersMapper">
+
+    <!-- 通用字段映射 -->
+    <resultMap id="UserAnswersResultMap" type="org.horizon.module.qa.dal.dataobject.useranswers.UserAnswersDO">
+        <id     property="id"             column="id"/>
+        <result property="userId"         column="user_id"/>
+        <result property="questionsId"    column="questions_id"/>
+        <result property="langId"         column="lang_id"/>
+        <result property="answerText"     column="answer_text"/>
+        <result property="translatedText" column="translated_text"/>
+        <result property="modelName"      column="model_name"/>
+        <!-- 继承 BaseDO 的审计字段 -->
+        <result property="creator"        column="creator"/>
+        <result property="createTime"     column="create_time"/>
+        <result property="updater"        column="updater"/>
+        <result property="updateTime"     column="update_time"/>
+        <result property="deleted"        column="deleted"/>
+    </resultMap>
+
+    <!-- 字段列表 -->
+    <sql id="Base_Column_List">
+        id, user_id, questions_id, lang_id, answer_text, translated_text, model_name,
+        creator, create_time, updater, update_time, deleted
+    </sql>
+
+    <!-- 插入 -->
+    <insert id="insert"
+            parameterType="org.horizon.module.qa.dal.dataobject.useranswers.UserAnswersDO"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO qa_user_answers (
+        user_id, questions_id, lang_id, answer_text, translated_text, model_name,
+        creator, create_time, updater, update_time, deleted
+        )
+        VALUES (
+        #{userId}, #{questionsId}, #{langId}, #{answerText}, #{translatedText}, #{modelName},
+        #{creator}, NOW(), #{updater}, NOW(), #{deleted}
+        )
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateById" parameterType="org.horizon.module.qa.dal.dataobject.useranswers.UserAnswersDO">
+        UPDATE qa_user_answers
+        <set>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="questionsId != null">questions_id = #{questionsId},</if>
+            <if test="langId != null">lang_id = #{langId},</if>
+            <if test="answerText != null">answer_text = #{answerText},</if>
+            <if test="translatedText != null">translated_text = #{translatedText},</if>
+            <if test="modelName != null">model_name = #{modelName},</if>
+            <if test="updater != null">updater = #{updater},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除（单条） -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM qa_user_answers WHERE id = #{id}
+    </delete>
+
+    <!-- 删除（批量） -->
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM qa_user_answers
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 查询（单条） -->
+    <select id="selectById" parameterType="long" resultMap="UserAnswersResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM qa_user_answers
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询（分页列表） -->
+    <select id="selectPageList"
+            parameterType="org.horizon.module.qa.controller.admin.useranswers.vo.UserAnswersPageReqVO"
+            resultMap="UserAnswersResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM qa_user_answers
+        <where>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="questionsId != null">AND questions_id = #{questionsId}</if>
+            <if test="langId != null and langId != ''">AND lang_id = #{langId}</if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name ILIKE CONCAT('%', #{modelName}, '%')
+            </if>
+            <if test="answerText != null and answerText != ''">
+                AND answer_text ILIKE CONCAT('%', #{answerText}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+        LIMIT #{pageSize} OFFSET #{(pageNo - 1) * pageSize}
+    </select>
+
+    <!-- 查询（分页总数） -->
+    <select id="selectPageCount"
+            parameterType="org.horizon.module.qa.controller.admin.useranswers.vo.UserAnswersPageReqVO"
+            resultType="long">
+        SELECT COUNT(1)
+        FROM qa_user_answers
+        <where>
+            <if test="userId != null">AND user_id = #{userId}</if>
+            <if test="questionsId != null">AND questions_id = #{questionsId}</if>
+            <if test="langId != null and langId != ''">AND lang_id = #{langId}</if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name ILIKE CONCAT('%', #{modelName}, '%')
+            </if>
+            <if test="answerText != null and answerText != ''">
+                AND answer_text ILIKE CONCAT('%', #{answerText}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

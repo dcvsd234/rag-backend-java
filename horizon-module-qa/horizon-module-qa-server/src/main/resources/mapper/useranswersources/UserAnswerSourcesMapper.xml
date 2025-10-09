@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.horizon.module.qa.dal.mapper.useranswersources.UserAnswerSourcesMapper">
+
+    <!-- ================= ResultMap ================= -->
+    <resultMap id="UserAnswerSourcesResultMap" type="org.horizon.module.qa.dal.dataobject.useranswersources.UserAnswerSourcesDO">
+        <id     property="id"          column="id"/>
+        <result property="questionsId" column="questions_id"/>
+        <result property="sourceType"  column="source_type"/>
+        <result property="sourceId"    column="source_id"/>
+        <result property="spanStart"   column="span_start"/>
+        <result property="spanEnd"     column="span_end"/>
+        <result property="score"       column="score"/>
+        <result property="rank"        column="rank"/>
+
+        <!-- 若继承 BaseDO，请按表结构保留以下映射；否则删除这些行 -->
+        <result property="creator"     column="creator"/>
+        <result property="createTime"  column="create_time"/>
+        <result property="updater"     column="updater"/>
+        <result property="updateTime"  column="update_time"/>
+        <result property="deleted"     column="deleted"/>
+    </resultMap>
+
+    <!-- 公共列清单 -->
+    <sql id="Base_Column_List">
+        id, questions_id, source_type, source_id, span_start, span_end, score, rank,
+        creator, create_time, updater, update_time, deleted
+    </sql>
+
+    <!-- ================= Insert ================= -->
+    <!-- 如使用 MySQL 自增：useGeneratedKeys="true" keyProperty="id"
+         如使用 PostgreSQL 且主键来自序列，可改为 selectKey + nextval('qa_user_answer_sources_seq') -->
+    <insert id="insert" parameterType="org.horizon.module.qa.dal.dataobject.useranswersources.UserAnswerSourcesDO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO qa_user_answer_sources
+        (questions_id, source_type, source_id, span_start, span_end, score, rank,
+        creator, create_time, updater, update_time, deleted)
+        VALUES
+        (#{questionsId}, #{sourceType}, #{sourceId}, #{spanStart}, #{spanEnd}, #{score}, #{rank},
+        #{creator}, NOW(), #{updater}, NOW(), #{deleted})
+    </insert>
+
+    <!-- ================= Update ================= -->
+    <update id="updateById" parameterType="org.horizon.module.qa.dal.dataobject.useranswersources.UserAnswerSourcesDO">
+        UPDATE qa_user_answer_sources
+        <set>
+            <if test="questionsId != null">questions_id = #{questionsId},</if>
+            <if test="sourceType  != null and sourceType  != ''">source_type  = #{sourceType},</if>
+            <if test="sourceId    != null">source_id    = #{sourceId},</if>
+            <if test="spanStart   != null">span_start   = #{spanStart},</if>
+            <if test="spanEnd     != null">span_end     = #{spanEnd},</if>
+            <if test="score       != null">score        = #{score},</if>
+            <if test="rank        != null">rank         = #{rank},</if>
+
+            <if test="updater     != null">updater      = #{updater},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- ================= Delete ================= -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM qa_user_answer_sources WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM qa_user_answer_sources
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- ================= Select ================= -->
+    <select id="selectById" parameterType="long" resultMap="UserAnswerSourcesResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM qa_user_answer_sources
+        WHERE id = #{id}
+    </select>
+
+    <!-- 可复用 WHERE 片段：按你的 PageReqVO 字段增减条件 -->
+    <sql id="Where_Clause">
+        <where>
+            <if test="questionsId != null">
+                AND questions_id = #{questionsId}
+            </if>
+            <if test="sourceType != null and sourceType != ''">
+                AND source_type = #{sourceType}
+            </if>
+            <if test="sourceId != null">
+                AND source_id = #{sourceId}
+            </if>
+            <if test="rank != null">
+                AND rank = #{rank}
+            </if>
+
+            <!-- 时间范围（如果 PageReqVO 提供了类似字段） -->
+            <if test="beginCreateTime != null">
+                AND create_time &gt;= #{beginCreateTime}
+            </if>
+            <if test="endCreateTime != null">
+                AND create_time &lt;= #{endCreateTime}
+            </if>
+
+            <!-- 逻辑删除（如有） -->
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+    </sql>
+
+    <!-- ============== 分页：列表 ============== -->
+    <select id="selectPageList"
+            parameterType="org.horizon.module.qa.controller.admin.useranswersources.vo.UserAnswerSourcesPageReqVO"
+            resultMap="UserAnswerSourcesResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM qa_user_answer_sources
+        <include refid="Where_Clause"/>
+        ORDER BY id DESC
+        LIMIT #{pageSize} OFFSET #{(pageNo - 1) * pageSize}
+    </select>
+
+    <!-- ============== 分页：总数 ============== -->
+    <select id="selectPageCount"
+            parameterType="org.horizon.module.qa.controller.admin.useranswersources.vo.UserAnswerSourcesPageReqVO"
+            resultType="long">
+        SELECT COUNT(1)
+        FROM qa_user_answer_sources
+        <include refid="Where_Clause"/>
+    </select>
+
+</mapper>
