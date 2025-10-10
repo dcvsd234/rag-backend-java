@@ -20,7 +20,7 @@ public interface UserQuestionsService {
      * @param createReqVO 创建信息
      * @return 编号
      */
-    Long createUserQuestions(@Valid UserQuestionsSaveReqVO createReqVO);
+    UserQuestionsFullRespVO createUserQuestions(@Valid UserQuestionsSaveReqVO createReqVO);
 
     /**
      * 更新RAG 用户问题表（终端用户的每一次提问记录）

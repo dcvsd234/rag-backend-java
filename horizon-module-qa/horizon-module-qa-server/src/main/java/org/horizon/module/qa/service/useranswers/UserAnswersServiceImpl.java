@@ -43,6 +43,15 @@ public class UserAnswersServiceImpl implements UserAnswersService {
     }
 
     @Override
+    public Long createUserAnswers(UserAnswersDO createReqDO) {
+        // 插入
+        userAnswersMapper.insert(createReqDO);
+
+        // 返回
+        return createReqDO.getId();
+    }
+
+    @Override
     public void updateUserAnswers(UserAnswersSaveReqVO updateReqVO) {
         // 校验存在
         validateUserAnswersExists(updateReqVO.getId());

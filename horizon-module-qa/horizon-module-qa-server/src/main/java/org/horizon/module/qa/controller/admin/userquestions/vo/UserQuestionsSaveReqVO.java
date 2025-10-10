@@ -16,7 +16,8 @@ public class UserQuestionsSaveReqVO {
     private Long userId;
 
     @Schema(description = "匿名用户ID（未注册用户使用）", example = "1500")
-    private Object anonUserId;
+    @NotBlank(message = "匿名用户ID不能为空")
+    private String anonUserId;
 
     @Schema(description = "会话标识（用于多轮对话追踪；前端携带）", requiredMode = Schema.RequiredMode.REQUIRED, example = "18666")
     @NotEmpty(message = "会话标识（用于多轮对话追踪；前端携带）不能为空")

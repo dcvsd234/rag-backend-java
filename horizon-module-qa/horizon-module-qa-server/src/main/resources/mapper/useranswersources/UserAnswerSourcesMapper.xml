@@ -131,4 +131,28 @@
         <include refid="Where_Clause"/>
     </select>
 
+    <!-- ================= Batch Insert ================= -->
+    <!-- 批量插入（PostgreSQL / MySQL 通用）
+         注意：此写法不使用 useGeneratedKeys，因为批量插入时主键通常数据库自增或 UUID 生成 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO qa_user_answer_sources
+        (questions_id, source_type, source_id, span_start, span_end, score, rank,
+        creator, create_time, updater, update_time, deleted)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.questionsId},
+            #{item.sourceType},
+            #{item.sourceId},
+            #{item.spanStart},
+            #{item.spanEnd},
+            #{item.score},
+            #{item.rank},
+            #{item.creator},
+            NOW(),
+            #{item.updater},
+            NOW(),
+            #{item.deleted})
+        </foreach>
+    </insert>
+
 </mapper>

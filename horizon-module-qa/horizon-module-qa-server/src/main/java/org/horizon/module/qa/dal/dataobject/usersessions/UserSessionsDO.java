@@ -36,6 +36,11 @@ public class UserSessionsDO extends BaseDO {
     private Long tenantId;
 
     /**
+     * 匿名用户ID
+     */
+    private Long anonUserId;
+
+    /**
      * 注册用户ID（匿名时为空）
      */
     private Long userId;

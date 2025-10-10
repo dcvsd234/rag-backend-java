@@ -20,6 +20,8 @@ public interface UserSessionsMapper {
 
     int deleteByIds(@Param("ids") List<Long> ids);
 
+    UserSessionsDO selectByAnonUserId(@Param("anonUserId") String anonUserId);
+
     UserSessionsDO selectById(@Param("id") Long id);
 
     // ====== 分页（两条 SQL：列表 + 统计） ======

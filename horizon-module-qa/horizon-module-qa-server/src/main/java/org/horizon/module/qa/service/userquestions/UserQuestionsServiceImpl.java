@@ -2,18 +2,23 @@ package org.horizon.module.qa.service.userquestions;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import org.horizon.framework.ai.core.client.ModelToolsClient;
 import org.horizon.framework.ai.core.dto.embed.EmbedResp;
 import org.horizon.framework.ai.core.dto.ragorchestrator.AskReq;
 import org.horizon.framework.ai.core.dto.ragorchestrator.AskResp;
+import org.horizon.framework.ai.core.dto.ragorchestrator.SourceItem;
 import org.horizon.framework.ai.core.infer.impl.AskToInfer;
 import org.horizon.framework.ai.core.infer.impl.EmbedToInfer;
 import org.horizon.framework.tenant.core.context.TenantContextHolder;
 import org.horizon.module.qa.controller.admin.usersessions.vo.UserSessionsSaveReqVO;
 import org.horizon.module.qa.dal.dataobject.useranswers.UserAnswersDO;
+import org.horizon.module.qa.dal.dataobject.useranswersources.UserAnswerSourcesDO;
 import org.horizon.module.qa.dal.dataobject.usersessions.UserSessionsDO;
+import org.horizon.module.qa.service.useranswers.UserAnswersService;
+import org.horizon.module.qa.service.useranswersources.UserAnswerSourcesService;
 import org.horizon.module.qa.service.usersessions.UserSessionsService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -55,9 +60,17 @@ public class UserQuestionsServiceImpl implements UserQuestionsService {
     @Lazy
     private final UserSessionsService userSessionsService;
 
+    @Resource
+    @Lazy
+    private final UserAnswersService userAnswersService;
+
+    @Resource
+    @Lazy
+    private final UserAnswerSourcesService userAnswerSourcesService;
+
 
     @Override
-    public Long createUserQuestions(UserQuestionsSaveReqVO createReqVO) {
+    public UserQuestionsFullRespVO createUserQuestions(UserQuestionsSaveReqVO createReqVO) {
 
         //租户ID
         Long tenantId = TenantContextHolder.getTenantId();
@@ -65,16 +78,20 @@ public class UserQuestionsServiceImpl implements UserQuestionsService {
         //用户原始提问
         String originalText = createReqVO.getOriginalText();
         //语言
-        String langId= createReqVO.getLangId();
+        String langId = createReqVO.getLangId();
+        //用户ID
+        Long userId = createReqVO.getUserId();
         //匿名用户ID
-        Object anon_user_id = createReqVO.getAnonUserId();
+        String anonUserId = createReqVO.getAnonUserId();
 
-        //1，根据session_token 获得 session_id,如果没有，就要根据session_token创建会话表，并且获得id
+        UserSessionsDO userSessions =  userSessionsService.getUserSessionsId(anonUserId);
 
-        String sessionToken=UUID.randomUUID().toString();;
+        if(ObjectUtil.isEmpty(userSessions)){
+            userSessions = new UserSessionsDO();
+        }
 
-        String sessionId = "";
-        
+
+        String sessionId = String.valueOf(userSessions.getId());
         //2，拼接 rag_orchestrator 的请求参数
 
         AskReq askReq = new AskReq();
@@ -94,30 +111,30 @@ public class UserQuestionsServiceImpl implements UserQuestionsService {
         );
 
         /** 用户输入的原始问题（母语） */
-        //String originalQuestion = askResp.getOriginalQuestion();
-        String originalQuestion = "用户输入的原始问题（母语）";
+
+        Map<String, Object> additionalProperties = askResp.getAdditionalProperties();
+        //original_question -> 永驻者办理手续
+        String originalQuestion = String.valueOf(additionalProperties.get("original_question"));
+        //String originalQuestion = "用户输入的原始问题（母语）";
 
         /** 用户输入统一翻译为日语后的内容 */
-        //String translatedInput =   askResp.getTranslatedInput();
-        String translatedInput =   "用户输入统一翻译为日语后的内容";
+        String translatedInput =    String.valueOf(additionalProperties.get("translated_input"));
+        //String translatedInput =   "用户输入统一翻译为日语后的内容";
 
         /** 模型在日语下生成的原始回答 */
-        //String generatedText = askResp.getGeneratedText();
-        String generatedText = "原始回答";
+        String generatedText =  String.valueOf(additionalProperties.get("generated_text"));
+        //String generatedText = "原始回答";
 
         /** 翻译回用户母语的最终回答 */
-        //String finalText = askResp.getFinalText();
-        String finalText = "用户母语的最终回答";
+        String finalText = String.valueOf(additionalProperties.get("final_text"));
+        //String finalText = "用户母语的最终回答";
 
 
         //4,会话表
-        UserSessionsDO userSessions = new UserSessionsDO();
         //(1)租户ID
         userSessions.setTenantId(tenantId);
         //(2)用户ID
         userSessions.setUserId(null);
-        //(4)会话标识
-        userSessions.setSessionToken(sessionToken);
         //会话累计
         userSessions.setTokenUsed(10);
         //状态
@@ -143,16 +160,14 @@ public class UserQuestionsServiceImpl implements UserQuestionsService {
         }
 
 
-
-
-        //4，用户问题表 插入
+        //5，用户问题表 插入
         UserQuestionsDO userQuestions = BeanUtils.toBean(createReqVO, UserQuestionsDO.class);
         //(1)租户ID
         userQuestions.setTenantId(tenantId);
         //(2)用户ID
         userQuestions.setUserId(null);
         //(3)匿名用户ID
-        userQuestions.setAnonUserId(String.valueOf(anon_user_id));
+        userQuestions.setAnonUserId(String.valueOf(anonUserId));
         //(4)会话ID
         userQuestions.setSessionId(String.valueOf(userSessions.getId()));
         //(5)语言
@@ -169,20 +184,78 @@ public class UserQuestionsServiceImpl implements UserQuestionsService {
         userQuestionsMapper.insertSelective(userQuestions);
 
 
+        //6，用户回复表 插入
 
+        UserAnswersDO userAnswers = new UserAnswersDO();
+        //(1)租户ID
+        userAnswers.setTenantId(tenantId);
+        //(2)用户ID
+        userAnswers.setUserId(userId);
+        //(3)用户问题表ID
+        userAnswers.setQuestionsId(userQuestions.getId());
+        //(4)语言
+        userAnswers.setLangId(langId);
+        //(5)最终答案
+        userAnswers.setAnswerText(generatedText);
+        //(6)翻译文本
+        userAnswers.setTranslatedText(finalText);
+        //(7)模型
+        userAnswers.setModelName("plamo");
+        //(8)是否删除
+        userAnswers.setDeleted(false);
+        //(9)创建者ID
+        userAnswers.setCreator(tenantIdStr);
+        //(10)更新者ID
+        userAnswers.setUpdater(tenantIdStr);
 
-        //3，用户问题表 插入
-
-        //4，会话表 插入
-
-        //5，用户回复表 插入
+        userAnswersService.createUserAnswers(userAnswers);
 
         //6，回复来源表 插入
+        List<SourceItem> sources = askResp.getSources();
+        List<UserAnswerSourcesDO> userAnswerSourceList = new ArrayList<>();
+        for (SourceItem source : sources) {
 
+            Map<String, Object> metadata =source.getMetadata();
 
+            UserAnswerSourcesDO userAnswerSources = new UserAnswerSourcesDO();
+            //(1)用户问题表ID
+            userAnswerSources.setQuestionsId(userQuestions.getId());
+            //(2)来源类型source_type
+            String source_type=String.valueOf(metadata.get("source_type"));
+            userAnswerSources.setSourceType(source_type);
+            //(3)来源ID
+            Long source_id=Long.parseLong(metadata.get("source_id").toString());
+            userAnswerSources.setSourceId(source_id);
+            //(4)相似度
+
+            Double rerankScore = metadata.get("rerank_score") == null
+                    ? null
+                    : Double.valueOf(metadata.get("rerank_score").toString());
+            userAnswerSources.setScore(rerankScore);
+            //(5)排名顺序
+            Integer rank = metadata.get("rank") == null
+                    ? null
+                    : Integer.valueOf(metadata.get("rank").toString());
+            userAnswerSources.setRank(rank);
+            //(6)是否删除
+            userAnswerSources.setDeleted(false);
+            //(7)创建者ID
+            userAnswerSources.setCreator(tenantIdStr);
+            //(8)更新者ID
+            userAnswerSources.setUpdater(tenantIdStr);
+
+            userAnswerSourceList.add(userAnswerSources);
+        }
+
+        userAnswerSourcesService.batchCreateUserAnswerSources(userAnswerSourceList);
+
+        UserQuestionsFullRespVO userQuestionsFullResp = new UserQuestionsFullRespVO();
+        userQuestionsFullResp.setUserAnswer(userAnswers);
+        userQuestionsFullResp.setUserAnswerSources(userAnswerSourceList);
+        userQuestionsFullResp.setUserQuestion(userQuestions);
 
         // 返回
-        return userQuestions.getId();
+        return userQuestionsFullResp;
     }
 
     @Override

@@ -22,6 +22,8 @@ public interface UserAnswersService {
      */
     Long createUserAnswers(@Valid UserAnswersSaveReqVO createReqVO);
 
+    Long createUserAnswers(@Valid UserAnswersDO createReqDO);
+
     /**
      * 更新RAG 用户回复表（保存终端用户每个提问对应的模型回复）
      *

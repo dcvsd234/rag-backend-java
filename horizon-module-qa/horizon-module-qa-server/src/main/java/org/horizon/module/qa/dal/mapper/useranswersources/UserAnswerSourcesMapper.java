@@ -33,4 +33,12 @@ public interface UserAnswerSourcesMapper {
         Long total = selectPageCount(reqVO);
         return new PageResult<>(list, total == null ? 0L : total);
     }
+
+    // ====== 批量插入 ======
+    /**
+     * 批量插入 UserAnswerSources 记录
+     *
+     * @param list 回答来源列表
+     */
+    void insertBatch(@Param("list") List<UserAnswerSourcesDO> list);
 }

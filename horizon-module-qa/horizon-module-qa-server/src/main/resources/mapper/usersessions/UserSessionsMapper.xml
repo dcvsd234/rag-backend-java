@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- 注意：namespace 必须与接口全限定名一致 -->
 <mapper namespace="org.horizon.module.qa.dal.mapper.usersessions.UserSessionsMapper">
 
     <!-- ================= ResultMap ================= -->
@@ -10,6 +9,7 @@
         <id     property="id"            column="id"/>
         <result property="tenantId"      column="tenant_id"/>
         <result property="userId"        column="user_id"/>
+        <result property="anonUserId"    column="anon_user_id"/>     <!-- 新增 -->
         <result property="sessionToken"  column="session_token"/>
         <result property="tokenUsed"     column="token_used"/>
         <result property="lastActivity"  column="last_activity"/>
@@ -27,25 +27,42 @@
 
     <!-- ================= 公共列清单 ================= -->
     <sql id="Base_Column_List">
-        id, tenant_id, user_id, session_token, token_used,
+        id, tenant_id, user_id, anon_user_id, session_token, token_used,
         last_activity, start_time, end_time, status,
         creator, create_time, updater, update_time, deleted
     </sql>
 
-    <!-- ================= Insert ================= -->
+    <!-- ================= Insert（动态列；字符串→UUID 显式转换） ================= -->
     <insert id="insert"
             parameterType="org.horizon.module.qa.dal.dataobject.usersessions.UserSessionsDO"
             useGeneratedKeys="true"
             keyProperty="id">
-        INSERT INTO qa_user_sessions (
-        tenant_id, user_id, session_token, token_used,
-        last_activity, start_time, end_time, status,
-        creator, create_time, updater, update_time, deleted
-        ) VALUES (
-        #{tenantId}, #{userId}, #{sessionToken}, #{tokenUsed},
-        #{lastActivity}, #{startTime}, #{endTime}, #{status},
-        #{creator}, NOW(), #{updater}, NOW(), #{deleted}
-        )
+        INSERT INTO qa_user_sessions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            tenant_id,
+            <if test="userId != null">user_id,</if>
+            <if test="anonUserId != null and anonUserId != ''">anon_user_id,</if>
+            <!-- 只有在传入时才写 session_token；否则让 DEFAULT gen_random_uuid() 生效 -->
+            <if test="sessionToken != null and sessionToken != ''">session_token,</if>
+            <if test="tokenUsed != null">token_used,</if>
+            <if test="lastActivity != null">last_activity,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="status != null and status != ''">status,</if>
+            creator, create_time, updater, update_time, deleted
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{tenantId},
+            <if test="userId != null">#{userId},</if>
+            <if test="anonUserId != null and anonUserId != ''">CAST(#{anonUserId} AS uuid),</if>
+            <if test="sessionToken != null and sessionToken != ''">CAST(#{sessionToken} AS uuid),</if>
+            <if test="tokenUsed != null">#{tokenUsed},</if>
+            <if test="lastActivity != null">#{lastActivity},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            #{creator}, NOW(), #{updater}, NOW(), #{deleted}
+        </trim>
     </insert>
 
     <!-- ================= Update ================= -->
@@ -54,13 +71,13 @@
         <set>
             <if test="tenantId != null">tenant_id = #{tenantId},</if>
             <if test="userId != null">user_id = #{userId},</if>
-            <if test="sessionToken != null and sessionToken != ''">session_token = #{sessionToken},</if>
+            <if test="anonUserId != null and anonUserId != ''">anon_user_id = CAST(#{anonUserId} AS uuid),</if>
+            <if test="sessionToken != null and sessionToken != ''">session_token = CAST(#{sessionToken} AS uuid),</if>
             <if test="tokenUsed != null">token_used = #{tokenUsed},</if>
             <if test="lastActivity != null">last_activity = #{lastActivity},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
             <if test="status != null and status != ''">status = #{status},</if>
-
             <if test="updater != null">updater = #{updater},</if>
             update_time = NOW()
         </set>
@@ -87,7 +104,7 @@
         WHERE id = #{id}
     </select>
 
-    <!-- ================= WHERE 片段 ================= -->
+    <!-- ================= WHERE 片段（字符串→UUID 显式转换） ================= -->
     <sql id="Where_Clause">
         <where>
             <if test="tenantId != null">
@@ -96,8 +113,11 @@
             <if test="userId != null">
                 AND user_id = #{userId}
             </if>
+            <if test="anonUserId != null and anonUserId != ''">
+                AND anon_user_id = CAST(#{anonUserId} AS uuid)
+            </if>
             <if test="sessionToken != null and sessionToken != ''">
-                AND session_token = #{sessionToken}
+                AND session_token = CAST(#{sessionToken} AS uuid)
             </if>
             <if test="status != null and status != ''">
                 AND status = #{status}
@@ -131,6 +151,17 @@
             </if>
         </where>
     </sql>
+
+    <!-- ================= 根据 anon_user_id 查询会话 ================= -->
+    <select id="selectByAnonUserId"
+            parameterType="string"
+            resultMap="UserSessionsResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM qa_user_sessions
+        WHERE anon_user_id = CAST(#{anonUserId} AS uuid)
+        AND deleted = FALSE
+        LIMIT 1
+    </select>
 
     <!-- ================= 分页查询 ================= -->
     <select id="selectPageList"

@@ -43,6 +43,28 @@ public class UserAnswerSourcesServiceImpl implements UserAnswerSourcesService {
     }
 
     @Override
+    public Long createUserAnswerSources(UserAnswerSourcesDO createReqDO) {
+        // 插入
+        userAnswerSourcesMapper.insert(createReqDO);
+
+        // 返回
+        return createReqDO.getId();
+    }
+
+    /**
+     * 批量创建回答来源
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void batchCreateUserAnswerSources(List<UserAnswerSourcesDO> sources) {
+        if (CollUtil.isEmpty(sources)) {
+            return;
+        }
+        // 批量插入
+        userAnswerSourcesMapper.insertBatch(sources);
+    }
+
+    @Override
     public void updateUserAnswerSources(UserAnswerSourcesSaveReqVO updateReqVO) {
         // 校验存在
         validateUserAnswerSourcesExists(updateReqVO.getId());

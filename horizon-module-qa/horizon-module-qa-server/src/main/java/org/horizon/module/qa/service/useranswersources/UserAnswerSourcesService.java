@@ -22,6 +22,11 @@ public interface UserAnswerSourcesService {
      */
     Long createUserAnswerSources(@Valid UserAnswerSourcesSaveReqVO createReqVO);
 
+
+    Long createUserAnswerSources(@Valid UserAnswerSourcesDO createReqDO);
+
+    void batchCreateUserAnswerSources(List<UserAnswerSourcesDO> sources);
+
     /**
      * 更新RAG 回复来源表（记录答案所用的FAQ/文档/切片/AI等证据）
      *

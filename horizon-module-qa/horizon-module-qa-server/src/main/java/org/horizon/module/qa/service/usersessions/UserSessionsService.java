@@ -55,6 +55,8 @@ public interface UserSessionsService {
      */
     UserSessionsDO getUserSessions(Long id);
 
+    UserSessionsDO getUserSessionsId(String id);
+
     /**
      * 获得RAG 会话表：一段连续对话的容器（多个问题与回答的集合）分页
      *

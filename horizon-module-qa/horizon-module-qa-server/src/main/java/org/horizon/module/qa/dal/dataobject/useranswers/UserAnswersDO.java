@@ -28,6 +28,11 @@ public class UserAnswersDO extends BaseDO {
     @TableId
     private Long id;
     /**
+     * 租户ID
+     */
+    @TableId
+    private Long tenantId;
+    /**
      * 注册用户ID（若有登录则填，否则为空）
      */
     private Long userId;

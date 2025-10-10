@@ -95,6 +95,12 @@ public class UserSessionsServiceImpl implements UserSessionsService {
     }
 
     @Override
+    public UserSessionsDO getUserSessionsId(String id) {
+        return userSessionsMapper.selectByAnonUserId(id);
+    }
+
+
+    @Override
     public PageResult<UserSessionsDO> getUserSessionsPage(UserSessionsPageReqVO pageReqVO) {
         return userSessionsMapper.selectPage(pageReqVO);
     }

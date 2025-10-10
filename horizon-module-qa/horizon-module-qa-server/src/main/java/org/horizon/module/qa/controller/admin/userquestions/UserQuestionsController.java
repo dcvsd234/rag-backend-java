@@ -41,8 +41,12 @@ public class UserQuestionsController {
     @PostMapping("/create")
     @Operation(summary = "创建RAG 用户问题表（终端用户的每一次提问记录）")
     @PreAuthorize("@ss.hasPermission('qa:user-questions:create')")
-    public CommonResult<Long> createUserQuestions(@Valid @RequestBody UserQuestionsSaveReqVO createReqVO) {
-        return success(userQuestionsService.createUserQuestions(createReqVO));
+    public CommonResult<UserQuestionsFullRespVO> createUserQuestions(
+            @Valid @RequestBody UserQuestionsSaveReqVO createReqVO) {
+        // ✅ 调用服务层
+        UserQuestionsFullRespVO respVO = userQuestionsService.createUserQuestions(createReqVO);
+        // ✅ 返回完整结构（问题 + 回答 + 证据）
+        return success(respVO);
     }
 
     @GetMapping("/get")
