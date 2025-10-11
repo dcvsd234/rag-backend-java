@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.horizon.module.trends.mapper.QuestionMapper">
+
+    <insert id="insert" parameterType="org.horizon.module.trends.dal.dataobject.KeywordDO"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO trends_keywords (keyword_text, tenant_id)
+        VALUES ( #{keywordText}, #{tenantId} )
+    </insert>
+
+    <select id="selectPage" resultType="org.horizon.module.trends.dal.dataobject.KeywordDO">
+        SELECT id,
+        keyword_text AS keywordText,
+        tenant_id AS tenantId,
+        create_time AS createTime
+        FROM trends_keywords
+        WHERE tenant_id = #{tenantId}
+        <if test="text != null and text != ''">
+            AND keyword_text LIKE CONCAT('%', #{text}, '%')
+        </if>
+        ORDER BY id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectPageCount" resultType="long">
+        SELECT COUNT(*)
+        FROM trends_keywords
+        WHERE tenant_id = #{tenantId}
+        <if test="text != null and text != ''">
+            AND keyword_text LIKE CONCAT('%', #{text}, '%')
+        </if>
+    </select>
+
+</mapper>

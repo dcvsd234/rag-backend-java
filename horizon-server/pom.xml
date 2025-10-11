@@ -38,6 +38,7 @@
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-module-qa-server</artifactId>
+            <artifactId>horizon-module-trends-server</artifactId>
             <version>${revision}</version>
         </dependency>
 <!--        <dependency>-->
