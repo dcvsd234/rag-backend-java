@@ -6,11 +6,11 @@
 
     <parent>
         <groupId>org.horizon</groupId>
-        <artifactId>horizon-framework-ai</artifactId>
+        <artifactId>horizon-module-ai</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>horizon-framework-ai-client</artifactId>
+    <artifactId>horizon-module-ai-client</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
