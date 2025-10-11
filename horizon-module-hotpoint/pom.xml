@@ -16,7 +16,6 @@
       hot point module
     </description>
     <modules>
-        <module>horizon-module-hotpoint-api</module>
         <module>horizon-module-hotpoint-server</module>
     </modules>
 
