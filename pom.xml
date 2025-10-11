@@ -11,9 +11,9 @@
         <module>horizon-dependencies</module>
         <module>horizon-gateway</module>
         <module>horizon-framework</module>
-        <!-- Server 主项目 -->
+        <!-- Server main project -->
         <module>horizon-server</module>
-        <!--  各种 module 拓展 -->
+        <!--   module  -->
         <module>horizon-module-system</module>
         <module>horizon-module-infra</module>
         <module>horizon-module-member</module>
@@ -25,7 +25,7 @@
         <module>horizon-framework-ai</module>
         <module>horizon-module-dataset</module>
         <module>horizon-module-trends</module>
-        <!-- 友情提示：基于 Spring AI 实现 LLM 大模型的接入，需要使用 JDK17 版本，详细可见 https://doc.iocoder.cn/ai/build/ -->
+        <!--  Spring AI need JDK17 -->
 <!--        <module>horizon-module-ai</module>-->
 
     </modules>
@@ -34,7 +34,7 @@
 
     <properties>
         <revision>2025.08-jdk8-SNAPSHOT</revision>
-        <!-- Maven 相关 -->
+        <!-- Maven  -->
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
