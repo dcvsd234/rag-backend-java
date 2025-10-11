@@ -16,7 +16,6 @@
         trends module
     </description>
     <modules>
-        <module>horizon-module-trends-api</module>
         <module>horizon-module-trends-server</module>
     </modules>
 
