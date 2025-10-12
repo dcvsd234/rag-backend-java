@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
-    <description>API 服务网关，基于 Spring Cloud Gateway 实现</description>
+    <description>API service gateway，base on Spring Cloud Gateway </description>
     <url>https://github.com/YunaiV/horizon-cloud</url>
 
     <dependencies>

@@ -42,7 +42,7 @@
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.horizon</groupId>-->
-<!--            <artifactId>horizon-module-hotpoint-server</artifactId>-->
+<!--            <artifactId>horizon-module-trends-server</artifactId>-->
 <!--            <version>${revision}</version>-->
 <!--        </dependency>-->
         <dependency>
@@ -129,13 +129,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.postgresql</groupId>-->
-<!--            <artifactId>postgresql</artifactId>-->
-<!--            <version>42.7.4</version>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
 
     </dependencies>
 

@@ -1,6 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.horizon</groupId>
         <artifactId>horizon-module-knowledge</artifactId>
@@ -14,10 +18,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
     <dependencies>
-
+        <!-- 内部模块依赖 -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-module-infra-api</artifactId>
@@ -30,10 +35,9 @@
             <version>${revision}</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.horizon</groupId>
-            <artifactId>horizon-framework-ai-client</artifactId>
+            <artifactId>horizon-module-ai-client</artifactId>
             <version>${revision}</version>
         </dependency>
 
@@ -43,7 +47,7 @@
             <artifactId>horizon-spring-boot-starter-biz-data-permission</artifactId>
         </dependency>
 
-        <!-- Web 相关 -->
+        <!-- Web 安全与通用组件 -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-web</artifactId>
@@ -65,7 +69,7 @@
             <artifactId>horizon-spring-boot-starter-redis</artifactId>
         </dependency>
 
-        <!-- 工具类相关 -->
+        <!-- 工具类 -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-excel</artifactId>
@@ -81,24 +85,23 @@
             <artifactId>horizon-spring-boot-starter-biz-tenant</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
     </dependencies>
+
     <build>
+        <!-- 设置构建的 jar 包名 -->
+        <finalName>${project.artifactId}</finalName>
+
         <plugins>
+            <!-- 禁用 Boot 可执行 JAR 打包，仅编译为普通 jar -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 
 </project>
