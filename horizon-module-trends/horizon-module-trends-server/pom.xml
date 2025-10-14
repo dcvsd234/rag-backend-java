@@ -21,6 +21,13 @@
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-env</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-module-ai-client</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-biz-ip</artifactId>
@@ -29,6 +36,22 @@
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-biz-data-permission</artifactId>
         </dependency>
+
+
+        <!-- business components -->
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-biz-data-permission</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-biz-tenant</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-spring-boot-starter-biz-ip</artifactId>
+        </dependency>
+
 
         <!-- Web 相关 -->
         <dependency>
@@ -41,7 +64,7 @@
             <artifactId>horizon-spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- DB 相关 -->
+        <!-- DB -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-mybatis</artifactId>
@@ -51,7 +74,6 @@
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-redis</artifactId>
         </dependency>
-
 
         <!-- Test 测试相关 -->
         <dependency>
@@ -68,12 +90,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.horizon</groupId>
-            <artifactId>horizon-gateway</artifactId>
-            <version>2025.08-jdk8-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

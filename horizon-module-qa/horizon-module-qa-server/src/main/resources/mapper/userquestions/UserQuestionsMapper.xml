@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.horizon.module.qa.dal.mapper.userquestions.UserQuestionsMapper">
+
+    <!-- ================= ResultMap ================= -->
+    <resultMap id="UserQuestionsResultMap" type="org.horizon.module.qa.dal.dataobject.userquestions.UserQuestionsDO">
+        <id     property="id"             column="id"/>
+        <result property="tenantId"       column="tenant_id"/>
+        <result property="userId"         column="user_id"/>
+        <result property="anonUserId"     column="anon_user_id"/>
+        <result property="sessionId"      column="session_id"/>
+        <result property="langId"         column="lang_id"/>
+        <result property="originalText"   column="original_text"/>
+        <result property="translatedText" column="translated_text"/>
+        <result property="creator"        column="creator"/>
+        <result property="createTime"     column="create_time"/>
+        <result property="updater"        column="updater"/>
+        <result property="updateTime"     column="update_time"/>
+        <result property="deleted"        column="deleted"/>
+    </resultMap>
+
+    <!-- ================= 公共列清单 ================= -->
+    <sql id="Base_Column_List">
+        id, tenant_id, user_id, anon_user_id, session_id, lang_id, original_text, translated_text,
+        creator, create_time, updater, update_time, deleted
+    </sql>
+
+    <!-- ================= Insert（DB 生成 anon_user_id 时回填） ================= -->
+    <insert id="insert"
+            parameterType="org.horizon.module.qa.dal.dataobject.userquestions.UserQuestionsDO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+        INSERT INTO qa_user_questions
+        (tenant_id, user_id, anon_user_id, session_id, lang_id, original_text, translated_text,
+        creator, create_time, updater, update_time, deleted)
+        VALUES
+        (#{tenantId},
+        #{userId},
+        <choose>
+            <when test="anonUserId != null and anonUserId.trim() != ''">
+                CAST(#{anonUserId} AS uuid)
+            </when>
+            <otherwise>
+                DEFAULT   <!-- 触发列默认：gen_random_uuid() -->
+            </otherwise>
+        </choose>,
+        #{sessionId},
+        #{langId},
+        #{originalText},
+        #{translatedText},
+        COALESCE(#{creator}, ''),
+        NOW(),
+        COALESCE(#{updater}, ''),
+        NOW(),
+        COALESCE(#{deleted}, FALSE))
+    </insert>
+    <!-- ============ InsertSelective（同样触发 DEFAULT 并回填） ============ -->
+    <insert id="insertSelective"
+            parameterType="org.horizon.module.qa.dal.dataobject.userquestions.UserQuestionsDO"
+            useGeneratedKeys="true"
+            keyProperty="id,anonUserId,deleted,createTime,updateTime"
+            keyColumn="id,anon_user_id,deleted,create_time,update_time">
+        INSERT INTO qa_user_questions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            tenant_id,
+            <if test="userId != null">user_id,</if>
+            anon_user_id,
+            <if test="sessionId != null and sessionId != ''">session_id,</if>
+            <if test="langId != null and langId != ''">lang_id,</if>
+            <if test="originalText != null">original_text,</if>
+            <if test="translatedText != null">translated_text,</if>
+            creator, create_time, updater, update_time, deleted
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            #{tenantId},
+            <if test="userId != null">#{userId},</if>
+            <choose>
+                <when test="anonUserId != null and anonUserId != ''">
+                    CAST(#{anonUserId} AS uuid)
+                </when>
+                <otherwise>
+                    DEFAULT
+                </otherwise>
+            </choose>,
+            <if test="sessionId != null and sessionId != ''">#{sessionId},</if>
+            <if test="langId != null and langId != ''">#{langId},</if>
+            <if test="originalText != null">#{originalText},</if>
+            <if test="translatedText != null">#{translatedText},</if>
+            COALESCE(#{creator}, ''),
+            NOW(),
+            COALESCE(#{updater}, ''),
+            NOW(),
+            COALESCE(#{deleted}, FALSE)
+        </trim>
+        RETURNING id, anon_user_id, deleted, create_time, update_time
+    </insert>
+
+    <!-- ================= Update ================= -->
+    <update id="updateById" parameterType="org.horizon.module.qa.dal.dataobject.userquestions.UserQuestionsDO">
+        UPDATE qa_user_questions
+        <set>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="anonUserId != null">
+                anon_user_id =
+                CASE
+                WHEN #{anonUserId} IS NULL OR #{anonUserId} = '' THEN NULL
+                ELSE CAST(#{anonUserId} AS uuid)
+                END,
+            </if>
+            <if test="sessionId != null and sessionId != ''">session_id = #{sessionId},</if>
+            <if test="langId != null and langId != ''">lang_id = #{langId},</if>
+            <if test="originalText != null">original_text = #{originalText},</if>
+            <if test="translatedText != null">translated_text = #{translatedText},</if>
+            <if test="updater != null">updater = COALESCE(#{updater}, ''),</if>
+            <if test="deleted != null">deleted = COALESCE(#{deleted}, FALSE),</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- ================= Delete ================= -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM qa_user_questions WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="list">
+        DELETE FROM qa_user_questions
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- ================= Select ================= -->
+    <select id="selectById" parameterType="long" resultMap="UserQuestionsResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM qa_user_questions
+        WHERE id = #{id}
+    </select>
+
+    <!-- ================= WHERE 条件复用 ================= -->
+    <sql id="Where_Clause">
+        <where>
+            <if test="tenantId != null">
+                AND tenant_id = #{tenantId}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="anonUserId != null and anonUserId != ''">
+                AND anon_user_id = CAST(#{anonUserId} AS uuid)
+            </if>
+            <if test="sessionId != null and sessionId != ''">
+                AND session_id = #{sessionId}
+            </if>
+            <if test="langId != null and langId != ''">
+                AND lang_id = #{langId}
+            </if>
+            <if test="originalText != null and originalText != ''">
+                AND original_text ILIKE '%' || #{originalText} || '%'
+            </if>
+            <if test="beginCreateTime != null">
+                AND create_time &gt;= #{beginCreateTime}
+            </if>
+            <if test="endCreateTime != null">
+                AND create_time &lt;= #{endCreateTime}
+            </if>
+            <if test="deleted != null">
+                AND deleted = #{deleted}
+            </if>
+        </where>
+    </sql>
+
+    <!-- ================= 分页列表 ================= -->
+    <select id="selectPageList"
+            parameterType="org.horizon.module.qa.controller.admin.userquestions.vo.UserQuestionsPageReqVO"
+            resultMap="UserQuestionsResultMap">
+        <bind name="offset" value="(pageNo-1)*pageSize"/>
+        SELECT <include refid="Base_Column_List"/>
+        FROM qa_user_questions
+        <include refid="Where_Clause"/>
+        ORDER BY id DESC
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- ================= 分页总数 ================= -->
+    <select id="selectPageCount"
+            parameterType="org.horizon.module.qa.controller.admin.userquestions.vo.UserQuestionsPageReqVO"
+            resultType="long">
+        SELECT COUNT(1)
+        FROM qa_user_questions
+        <include refid="Where_Clause"/>
+    </select>
+
+</mapper>
