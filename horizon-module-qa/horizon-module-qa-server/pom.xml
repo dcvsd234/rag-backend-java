@@ -1,6 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.horizon</groupId>
         <artifactId>horizon-module-qa</artifactId>
@@ -14,10 +18,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
     <dependencies>
-
+        <!-- 内部模块依赖 -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-module-qa-api</artifactId>
@@ -26,7 +31,7 @@
 
         <dependency>
             <groupId>org.horizon</groupId>
-            <artifactId>horizon-framework-ai-client</artifactId>
+            <artifactId>horizon-module-ai-client</artifactId>
             <version>${revision}</version>
         </dependency>
 
@@ -36,7 +41,7 @@
             <artifactId>horizon-spring-boot-starter-biz-data-permission</artifactId>
         </dependency>
 
-        <!-- Web 相关 -->
+        <!-- Web & 安全相关 -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-web</artifactId>
@@ -58,7 +63,7 @@
             <artifactId>horizon-spring-boot-starter-redis</artifactId>
         </dependency>
 
-        <!-- 工具类相关 -->
+        <!-- 工具类 -->
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-excel</artifactId>
@@ -78,19 +83,16 @@
     <build>
         <!-- 设置构建的 jar 包名 -->
         <finalName>${project.artifactId}</finalName>
+
         <plugins>
-            <!-- 打包 -->
+            <!-- 禁用 Spring Boot 打包，避免 “Unable to find main class” -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal> <!-- 将引入的 jar 打入其中 -->
-                        </goals>
-                    </execution>
-                </executions>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>

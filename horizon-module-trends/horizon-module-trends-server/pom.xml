@@ -21,6 +21,13 @@
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-env</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.horizon</groupId>
+            <artifactId>horizon-module-ai-client</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.horizon</groupId>
             <artifactId>horizon-spring-boot-starter-biz-ip</artifactId>

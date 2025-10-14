@@ -6,11 +6,11 @@
 
     <parent>
         <groupId>org.horizon</groupId>
-        <artifactId>horizon-framework-ai</artifactId>
+        <artifactId>horizon-module-ai</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>horizon-framework-ai-client</artifactId>
+    <artifactId>horizon-module-ai-client</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -27,10 +27,10 @@
             <artifactId>horizon-common</artifactId>
         </dependency>
 
-        <!-- Web 请求，用于调用 FastAPI（RestTemplate / WebClient） -->
+        <!-- 轻量 HTTP 客户端（替代 spring-boot-starter-web） -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <!-- JSON 序列化 -->
@@ -41,13 +41,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-
-        <!-- Feign（可选：声明式客户端） -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <!-- Test 测试依赖 -->
