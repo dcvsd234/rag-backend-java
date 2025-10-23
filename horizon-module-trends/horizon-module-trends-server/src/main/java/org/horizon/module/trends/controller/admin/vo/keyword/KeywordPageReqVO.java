@@ -12,5 +12,7 @@ public class KeywordPageReqVO extends PageParam {
 
     @Schema(description = "关键词名称，模糊匹配")
     private String text;
+    private Number page;
+    private Number pageSize;
 
 }
