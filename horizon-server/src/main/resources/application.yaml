@@ -309,3 +309,7 @@ debug: false
 # 插件配置 TODO 芋艿：【IOT】需要处理下
 pf4j:
   pluginsDir: /Users/anhaohao/code/gitee/ruoyi-vue-pro/plugins # 插件目录
+
+spring:
+  main:
+    web-application-type: servlet

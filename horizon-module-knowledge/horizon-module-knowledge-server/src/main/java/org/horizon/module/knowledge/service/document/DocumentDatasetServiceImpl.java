@@ -61,10 +61,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DocumentDatasetServiceImpl implements DocumentDatasetService {
 
+    private final ModelToolsClient modelToolsClient;
+
     @Resource
     @Lazy
     private final FaqsServiceImpl faqsServiceImpl;
-    private final ModelToolsClient modelToolsClient;
 
     @Resource
     @Lazy

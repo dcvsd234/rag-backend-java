@@ -29,23 +29,23 @@ spring:
       primary: master
       datasource:
         master:
-          url: jdbc:postgresql://127.0.0.1:5432/ruoyi-vue-pro # PostgreSQL 连接的示例
-          username: root
-          password: 123456
+          url: jdbc:postgresql://46.250.250.0:5432/rag_postgres
+          username: myappuser
+          password: rag2025ffree
           driver-class-name: org.postgresql.Driver
-        slave: # 模拟从库，可根据自己需要修改
-          lazy: true # 开启懒加载，保证启动速度
-          url: jdbc:postgresql://127.0.0.1:5433/ruoyi-vue-pro
-          username: root
-          password: 123456
-          driver-class-name: org.postgresql.Driver
+  #        slave: # 模拟从库，可根据自己需要修改
+  #          lazy: true # 开启懒加载，保证启动速度
+  #          url: jdbc:postgresql://127.0.0.1:5433/ruoyi-vue-pro
+  #          username: root
+  #          password: 123456
+  #          driver-class-name: org.postgresql.Driver
 
   # Redis 配置。Redisson 默认的配置足够使用，一般不需要进行调优
   redis:
-    host: 127.0.0.1 # 地址
+    host: 46.250.250.0 # 地址
     port: 6379 # 端口
     database: 0 # 数据库索引
-    password: 123456 # 密码，建议生产环境开启
+    password: "acasw3a#$^9sa(#$fs@e84(s"
 
 --- #################### MQ 消息队列相关配置 ####################
 

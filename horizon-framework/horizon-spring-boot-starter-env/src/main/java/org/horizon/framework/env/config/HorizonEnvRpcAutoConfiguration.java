@@ -10,6 +10,8 @@ import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClientSpeci
 import org.springframework.cloud.loadbalancer.config.LoadBalancerAutoConfiguration;
 import org.springframework.cloud.loadbalancer.support.LoadBalancerClientFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.List;
 /**
  * 多环境的 RPC 组件的自动配置
  *
- * @author 芋道源码
+ * @author freedom
  */
 @AutoConfiguration
 @EnableConfigurationProperties(EnvProperties.class)
@@ -31,6 +33,7 @@ public class HorizonEnvRpcAutoConfiguration {
      * 参考 {@link LoadBalancerAutoConfiguration#loadBalancerClientFactory(LoadBalancerClientsProperties)} 方法
      */
     @Bean
+    @ConditionalOnMissingBean(name = "loadBalancerClientFactory")
     public LoadBalancerClientFactory loadBalancerClientFactory(LoadBalancerClientsProperties properties,
                                                                ObjectProvider<List<LoadBalancerClientSpecification>> configurations) {
         EnvLoadBalancerClientFactory clientFactory = new EnvLoadBalancerClientFactory(properties);
